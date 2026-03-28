@@ -3,7 +3,7 @@ import type {
   ExecutionEventBus,
   RequestContext,
 } from '@a2a-js/sdk/server';
-import type { TaskStatusUpdateEvent } from '@a2a-js/sdk';
+import type { Task, TaskStatusUpdateEvent } from '@a2a-js/sdk';
 import type { AppState } from './state.js';
 
 export class UIBridgeExecutor implements AgentExecutor {
@@ -13,7 +13,21 @@ export class UIBridgeExecutor implements AgentExecutor {
     const taskId = ctx.taskId;
     const contextId = ctx.contextId;
 
-    // Set task to input-required immediately -- human needs to respond
+    // Publish task object first so the SDK's ResultManager registers it
+    const task: Task = {
+      id: taskId,
+      contextId,
+      kind: 'task',
+      status: {
+        state: 'input-required',
+        message: ctx.userMessage,
+        timestamp: new Date().toISOString(),
+      },
+      history: [ctx.userMessage],
+    };
+    eventBus.publish(task);
+
+    // Then publish status-update event for input-required state
     const event: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId,
