@@ -32,7 +32,7 @@ export default function ConnectionPanel() {
   const isConnecting = state.status === 'connecting';
 
   return (
-    <div className="w-80 border-r border-slate-200 bg-slate-50 p-6 flex flex-col overflow-y-auto">
+    <div className="w-80 flex-shrink-0 border-r border-slate-200 bg-slate-50 p-6 flex flex-col overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-slate-900">Connection</h2>
         <ConnectionStatus status={state.status} />
