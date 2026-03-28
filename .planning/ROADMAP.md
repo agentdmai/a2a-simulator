@@ -43,11 +43,11 @@ Plans:
   3. Streaming messages from a remote agent render incrementally in real time via SSE
   4. User can view raw JSON-RPC request/response pairs for any message exchange
   5. Task state changes are reflected in real time with visual status badges
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 02-01: React SPA shell with Vite, connection panel, and internal API layer
-- [ ] 02-02: Chat interface, SSE streaming (two-layer architecture), and task visualization
+- [ ] 02-01-PLAN.md — Vite + React scaffold, server API routes (connect/send/events/task), SSE bridge, ConnectionContext, hooks, and connection panel
+- [ ] 02-02-PLAN.md — Chat components (MessageBubble, MessageInput, TaskThread, StatusBadge, JsonDrawer, StreamingIndicator), wired into App layout
 
 ### Phase 3: Server Mode and Completeness
 **Goal**: Users can act as a server-side agent (receiving and responding to tasks) with full protocol coverage including auth and artifacts
