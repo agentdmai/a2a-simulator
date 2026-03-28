@@ -34,12 +34,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### UI
 
-- [ ] **UI-01**: Chat-style interface showing incoming and outgoing messages with sender, timestamp, and status indicators
-- [ ] **UI-02**: Task lifecycle visualization with state badges and transition history
-- [ ] **UI-03**: Raw JSON-RPC message view for inspecting wire-format requests and responses
+- [x] **UI-01**: Chat-style interface showing incoming and outgoing messages with sender, timestamp, and status indicators
+- [x] **UI-02**: Task lifecycle visualization with state badges and transition history
+- [x] **UI-03**: Raw JSON-RPC message view for inspecting wire-format requests and responses
 - [ ] **UI-04**: Agent Card configuration editor — edit own agent's name, description, skills; changes reflected immediately
 - [x] **UI-05**: Connection panel for entering remote agent URL and viewing connection status
-- [ ] **UI-06**: Message input for composing and sending messages to connected agents
+- [x] **UI-06**: Message input for composing and sending messages to connected agents
 
 ### Authentication
 
@@ -102,12 +102,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRVR-03 | Phase 3 | Pending |
 | SRVR-04 | Phase 3 | Pending |
 | SRVR-05 | Phase 3 | Pending |
-| UI-01 | Phase 2 | Pending |
-| UI-02 | Phase 2 | Pending |
-| UI-03 | Phase 2 | Pending |
+| UI-01 | Phase 2 | Complete |
+| UI-02 | Phase 2 | Complete |
+| UI-03 | Phase 2 | Complete |
 | UI-04 | Phase 3 | Pending |
 | UI-05 | Phase 2 | Complete |
-| UI-06 | Phase 2 | Pending |
+| UI-06 | Phase 2 | Complete |
 | AUTH-01 | Phase 3 | Pending |
 | AUTH-02 | Phase 3 | Pending |
 | STRM-01 | Phase 2 | Complete |

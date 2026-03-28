@@ -47,7 +47,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Vite + React scaffold, server API routes (connect/send/events/task), SSE bridge, ConnectionContext, hooks, and connection panel
-- [ ] 02-02-PLAN.md — Chat components (MessageBubble, MessageInput, TaskThread, StatusBadge, JsonDrawer, StreamingIndicator), wired into App layout
+- [x] 02-02-PLAN.md — Chat components (MessageBubble, MessageInput, TaskThread, StatusBadge, JsonDrawer, StreamingIndicator), wired into App layout
 
 ### Phase 3: Server Mode and Completeness
 **Goal**: Users can act as a server-side agent (receiving and responding to tasks) with full protocol coverage including auth and artifacts
