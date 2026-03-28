@@ -9,7 +9,7 @@ export function buildAgentCard(opts: { port: number; name: string; description: 
     protocolVersion: '0.3.0',
     version: '1.0.0',
     capabilities: {
-      streaming: false,
+      streaming: true,
       pushNotifications: false,
       stateTransitionHistory: true,
     },
