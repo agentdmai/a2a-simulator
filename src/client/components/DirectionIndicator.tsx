@@ -7,7 +7,7 @@ interface DirectionIndicatorProps {
 
 export default function DirectionIndicator({ direction, agentName }: DirectionIndicatorProps) {
   return (
-    <div className="flex items-center gap-1 text-xs text-slate-500">
+    <div className="flex items-center gap-1 text-xs text-fg-muted">
       {direction === 'incoming' ? (
         <>
           <ArrowLeft size={12} />

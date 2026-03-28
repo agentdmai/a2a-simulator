@@ -9,16 +9,16 @@ interface LeftPanelTabsProps {
 
 export default function LeftPanelTabs({ activeTab, onTabChange, incomingCount, children }: LeftPanelTabsProps) {
   return (
-    <div className="w-80 flex-shrink-0 border-r border-slate-200 bg-slate-50 flex flex-col overflow-hidden">
+    <div className="w-80 flex-shrink-0 border-r border-bd bg-bg-alt flex flex-col overflow-hidden">
       {/* Tab bar */}
-      <div className="flex border-b border-slate-200">
+      <div className="flex border-b border-bd">
         <button
           type="button"
           onClick={() => onTabChange('connection')}
           className={`flex-1 py-2 text-xs text-center ${
             activeTab === 'connection'
-              ? 'font-semibold text-slate-900 border-b-2 border-blue-600'
-              : 'text-slate-500 hover:text-slate-700'
+              ? 'font-semibold text-fg border-b-2 border-brand'
+              : 'text-fg-muted hover:text-fg'
           }`}
         >
           Connection
@@ -28,13 +28,13 @@ export default function LeftPanelTabs({ activeTab, onTabChange, incomingCount, c
           onClick={() => onTabChange('incoming')}
           className={`flex-1 py-2 text-xs text-center flex items-center justify-center gap-1 ${
             activeTab === 'incoming'
-              ? 'font-semibold text-slate-900 border-b-2 border-blue-600'
-              : 'text-slate-500 hover:text-slate-700'
+              ? 'font-semibold text-fg border-b-2 border-brand'
+              : 'text-fg-muted hover:text-fg'
           }`}
         >
           Incoming
           {incomingCount > 0 && (
-            <span className="bg-blue-600 text-white text-xs px-1 rounded-full min-w-[18px] text-center leading-tight">
+            <span className="bg-brand text-primary-fg text-xs px-1 rounded-full min-w-[18px] text-center leading-tight">
               {incomingCount}
             </span>
           )}

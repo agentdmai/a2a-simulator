@@ -7,6 +7,7 @@ import IncomingTaskList from './components/IncomingTaskList';
 import ChatPanel from './components/ChatPanel';
 import AgentCardEditorDrawer from './components/AgentCardEditorDrawer';
 import SuccessBanner from './components/SuccessBanner';
+import ThemeToggle from './components/ThemeToggle';
 import type { SSEStatus, TaskEventPayload, IncomingTaskPayload, AgentCardInfo, TaskData, TaskState } from './types/index';
 
 function AppContent() {
@@ -65,7 +66,7 @@ function AppContent() {
   }
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-bg">
       <LeftPanelTabs activeTab={activeTab} onTabChange={setActiveTab} incomingCount={incomingCount}>
         {activeTab === 'connection' ? (
           <ConnectionPanel onOpenEditor={() => setEditorOpen(true)} />
@@ -78,6 +79,10 @@ function AppContent() {
         )}
       </LeftPanelTabs>
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar with theme toggle */}
+        <div className="flex items-center justify-end px-4 py-2 border-b border-bd">
+          <ThemeToggle />
+        </div>
         {successMessage && <SuccessBanner message={successMessage} onDismiss={() => setSuccessMessage(null)} />}
         <ChatPanel />
       </div>

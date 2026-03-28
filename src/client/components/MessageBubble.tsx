@@ -14,12 +14,12 @@ export default function MessageBubble({ message, direction, onViewRaw }: Message
 
   const isOutgoing = direction === 'outgoing';
   const bubbleClasses = isOutgoing
-    ? 'ml-auto bg-blue-600 text-white rounded-2xl rounded-br-sm'
-    : 'mr-auto bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm';
+    ? 'ml-auto bg-primary text-primary-fg rounded-2xl rounded-br-sm'
+    : 'mr-auto bg-bg-alt text-fg rounded-2xl rounded-bl-sm';
 
   const timeClasses = isOutgoing
-    ? 'text-blue-200'
-    : 'text-slate-400';
+    ? 'text-brand-light'
+    : 'text-fg-muted';
 
   return (
     <div className={`max-w-[70%] px-4 py-2 ${bubbleClasses}`}>
@@ -39,7 +39,7 @@ export default function MessageBubble({ message, direction, onViewRaw }: Message
           <button
             type="button"
             onClick={onViewRaw}
-            className={`text-xs underline opacity-60 hover:opacity-100 ${isOutgoing ? 'text-blue-200' : 'text-slate-500'}`}
+            className={`text-xs underline opacity-60 hover:opacity-100 ${isOutgoing ? 'text-brand-light' : 'text-fg-muted'}`}
           >
             View raw
           </button>

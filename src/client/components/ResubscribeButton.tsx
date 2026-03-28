@@ -26,7 +26,7 @@ export default function ResubscribeButton({ taskId, onResubscribe }: Resubscribe
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 disabled:opacity-50"
+      className="flex items-center gap-1 text-xs text-brand hover:text-brand/80 disabled:opacity-50"
     >
       <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
       Resubscribe

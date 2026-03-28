@@ -110,7 +110,7 @@ export default function ChatPanel() {
 
         {/* Direction indicator for selected task */}
         {selectedTask && (
-          <div className="px-6 pt-3 pb-1 border-b border-slate-100">
+          <div className="px-6 pt-3 pb-1 border-b border-bd">
             <DirectionIndicator
               direction={selectedTask.direction}
               agentName={selectedTask.direction === 'incoming' ? (selectedTask.senderName || 'Remote Agent') : agentName}
@@ -129,15 +129,15 @@ export default function ChatPanel() {
               <div className="text-center">
                 {state.status === 'disconnected' || state.status === 'error' ? (
                   <>
-                    <h3 className="text-lg font-semibold text-slate-400">No agent connected</h3>
-                    <p className="mt-2 text-sm text-slate-400">
+                    <h3 className="text-lg font-semibold text-fg-muted">No agent connected</h3>
+                    <p className="mt-2 text-sm text-fg-muted">
                       Enter a remote agent URL in the connection panel to get started.
                     </p>
                   </>
                 ) : (
                   <>
-                    <h3 className="text-lg font-semibold text-slate-400">No messages yet</h3>
-                    <p className="mt-2 text-sm text-slate-400">
+                    <h3 className="text-lg font-semibold text-fg-muted">No messages yet</h3>
+                    <p className="mt-2 text-sm text-fg-muted">
                       Connect to a remote agent and send your first message to start testing.
                     </p>
                   </>
@@ -160,7 +160,7 @@ export default function ChatPanel() {
 
         {/* Send error */}
         {sendError && (
-          <div className="px-4 py-2 text-sm text-red-600 bg-red-50 border-t border-red-100">
+          <div className="px-4 py-2 text-sm text-red-400 bg-red-500/10 border-t border-red-500/20">
             {sendError}
           </div>
         )}

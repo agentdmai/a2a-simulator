@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A2A Protocol Test Client",
   "dependencies": {
     "@a2a-js/sdk": "^0.3.13",

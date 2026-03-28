@@ -10,7 +10,7 @@ export default function StateDropdown({ value, onChange }: StateDropdownProps) {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="text-sm border border-slate-300 rounded-md px-2 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      className="text-sm border border-bd rounded-md px-2 py-2 bg-bg text-fg focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"
     >
       {states.map((s) => (
         <option key={s} value={s}>{s}</option>

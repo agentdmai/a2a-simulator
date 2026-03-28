@@ -23,41 +23,41 @@ export default function ArtifactComposer({ onAdd, onCancel }: ArtifactComposerPr
   }
 
   return (
-    <div className="border border-slate-200 rounded-md p-3 space-y-2 bg-white">
+    <div className="border border-bd rounded-md p-3 space-y-2 bg-bg">
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Artifact name"
-        className="w-full px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-2 py-1 text-sm border border-bd rounded bg-bg text-fg focus:outline-none focus:ring-2 focus:ring-brand"
       />
       <input
         type="text"
         value={mimeType}
         onChange={(e) => setMimeType(e.target.value)}
         placeholder="text/plain"
-        className="w-full px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-2 py-1 text-sm border border-bd rounded bg-bg text-fg focus:outline-none focus:ring-2 focus:ring-brand"
       />
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Artifact content..."
         rows={6}
-        className="w-full px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        className="w-full px-2 py-1 text-sm border border-bd rounded bg-bg text-fg focus:outline-none focus:ring-2 focus:ring-brand resize-none"
       />
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={handleAdd}
           disabled={!name.trim()}
-          className="px-3 py-1 text-sm border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-3 py-1 text-sm border border-bd rounded-md text-fg hover:bg-bg-alt disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Add
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-sm text-slate-500 hover:text-slate-700"
+          className="text-sm text-fg-muted hover:text-fg"
         >
           Discard Artifact
         </button>

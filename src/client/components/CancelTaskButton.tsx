@@ -25,19 +25,19 @@ export default function CancelTaskButton({ taskId, onCancel }: CancelTaskButtonP
   if (confirming) {
     return (
       <span className="flex items-center gap-1 text-xs">
-        <span className="text-slate-600">Cancel this task?</span>
+        <span className="text-fg-muted">Cancel this task?</span>
         <button
           type="button"
           onClick={handleConfirm}
           disabled={canceling}
-          className="text-red-600 hover:text-red-700 font-medium"
+          className="text-red-500 hover:text-red-600 font-medium"
         >
           Yes, cancel
         </button>
         <button
           type="button"
           onClick={() => setConfirming(false)}
-          className="text-slate-500 hover:text-slate-700"
+          className="text-fg-muted hover:text-fg"
         >
           No
         </button>
@@ -49,7 +49,7 @@ export default function CancelTaskButton({ taskId, onCancel }: CancelTaskButtonP
     <button
       type="button"
       onClick={() => setConfirming(true)}
-      className="text-xs text-red-600 hover:text-red-700"
+      className="text-xs text-red-500 hover:text-red-600"
     >
       Cancel
     </button>

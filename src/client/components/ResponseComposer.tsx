@@ -85,7 +85,7 @@ export default function ResponseComposer({ taskId, onReply, contextId }: Respons
   }
 
   return (
-    <div className="border-t border-slate-200 bg-slate-50 p-4 space-y-2">
+    <div className="border-t border-bd bg-bg-alt p-4 space-y-2">
       {/* Main row: dropdown + textarea + reply button */}
       <div className="flex items-end gap-2">
         <StateDropdown value={selectedState} onChange={setSelectedState} />
@@ -97,14 +97,14 @@ export default function ResponseComposer({ taskId, onReply, contextId }: Respons
           onKeyDown={handleKeyDown}
           placeholder="Type a response..."
           rows={1}
-          className="flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 max-h-[6rem] overflow-y-auto"
+          className="flex-1 resize-none rounded-lg border border-bd bg-bg text-fg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand max-h-[6rem] overflow-y-auto"
         />
         <button
           type="button"
           onClick={handleSend}
           disabled={!canSend}
-          className={`bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium ${
-            !canSend ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+          className={`bg-primary text-primary-fg px-4 py-2 rounded-lg text-sm font-medium ${
+            !canSend ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90'
           }`}
         >
           Reply
@@ -130,7 +130,7 @@ export default function ResponseComposer({ taskId, onReply, contextId }: Respons
         <button
           type="button"
           onClick={() => setShowArtifactForm(true)}
-          className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
+          className="flex items-center gap-1 text-sm text-fg-muted hover:text-fg"
         >
           <Paperclip size={14} />
           Attach Artifact

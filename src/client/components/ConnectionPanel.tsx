@@ -49,7 +49,7 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
   return (
     <div className="p-6 flex flex-col overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-slate-900">Connection</h2>
+        <h2 className="text-lg font-semibold text-fg">Connection</h2>
         <ConnectionStatus status={state.status} />
       </div>
 
@@ -60,8 +60,8 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
           onChange={(e) => setUrl(e.target.value)}
           readOnly={isConnected}
           placeholder="https://localhost:3001"
-          className={`w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-            isConnected ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'
+          className={`w-full px-3 py-2 text-sm border border-bd rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-bg text-fg ${
+            isConnected ? 'opacity-60 cursor-not-allowed' : ''
           }`}
         />
 
@@ -72,7 +72,7 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
         />
 
         {state.error && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-500">
             {state.error}
           </p>
         )}
@@ -88,7 +88,7 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
           <button
             onClick={handleConnect}
             disabled={isConnecting || !url.trim()}
-            className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2 text-sm font-medium text-primary-fg bg-primary rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isConnecting ? 'Connecting...' : 'Connect'}
           </button>
@@ -103,7 +103,7 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
       <button
         type="button"
         onClick={onOpenEditor}
-        className="mt-4 w-full px-4 py-2 text-sm font-medium text-slate-600 border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="mt-4 w-full px-4 py-2 text-sm font-medium text-fg-muted border border-bd rounded-md hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-brand"
       >
         Edit Agent Card
       </button>

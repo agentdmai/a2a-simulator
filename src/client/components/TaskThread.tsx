@@ -28,19 +28,19 @@ export default function TaskThread({ task, onViewRaw, onSelectReply }: TaskThrea
   }
 
   return (
-    <div className="border-b border-slate-100 pb-4 mb-4">
+    <div className="border-b border-bd pb-4 mb-4">
       {/* Thread header */}
       <div className="flex items-center gap-2 py-1 px-2 -mx-2">
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-2 flex-1 text-left hover:bg-slate-50 rounded"
+          className="flex items-center gap-2 flex-1 text-left hover:bg-bg-alt rounded"
         >
           <ChevronDown
             size={16}
-            className={`text-slate-400 transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
+            className={`text-fg-muted transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
           />
-          <span className="font-mono text-xs text-slate-500" title={task.id}>
+          <span className="font-mono text-xs text-fg-muted" title={task.id}>
             {shortId}
           </span>
           <StatusBadge status={task.status} />
@@ -67,7 +67,7 @@ export default function TaskThread({ task, onViewRaw, onSelectReply }: TaskThrea
               <div
                 key={message.id}
                 onClick={canReply ? () => onSelectReply(task.id) : undefined}
-                className={canReply ? 'cursor-pointer hover:bg-slate-50 rounded-lg -mx-1 px-1 transition-colors' : ''}
+                className={canReply ? 'cursor-pointer hover:bg-bg-alt rounded-lg -mx-1 px-1 transition-colors' : ''}
                 title={canReply ? 'Click to reply to this task' : undefined}
               >
                 <MessageBubble
@@ -83,9 +83,9 @@ export default function TaskThread({ task, onViewRaw, onSelectReply }: TaskThrea
           {task.artifacts && task.artifacts.length > 0 && (
             <div className="space-y-1 mt-2">
               {task.artifacts.map((artifact) => (
-                <div key={artifact.artifactId} className="bg-slate-50 border border-slate-200 rounded p-2">
-                  <div className="text-xs font-medium text-slate-600">{artifact.name || 'Artifact'}</div>
-                  <pre className="text-xs text-slate-700 mt-1 whitespace-pre-wrap font-mono">{artifact.content}</pre>
+                <div key={artifact.artifactId} className="bg-bg-alt border border-bd rounded p-2">
+                  <div className="text-xs font-medium text-fg-muted">{artifact.name || 'Artifact'}</div>
+                  <pre className="text-xs text-fg mt-1 whitespace-pre-wrap font-mono">{artifact.content}</pre>
                 </div>
               ))}
             </div>

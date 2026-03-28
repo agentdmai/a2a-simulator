@@ -25,20 +25,20 @@ export default function IncomingTaskEntry({ task, selected, onClick }: IncomingT
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-left py-2 px-4 flex items-center gap-2 hover:bg-slate-100 ${
-        selected ? 'bg-blue-50 border-l-[3px] border-blue-600' : 'border-l-[3px] border-transparent'
+      className={`w-full text-left py-2 px-4 flex items-center gap-2 hover:bg-bg-alt ${
+        selected ? 'bg-brand/10 border-l-[3px] border-brand' : 'border-l-[3px] border-transparent'
       }`}
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-900 truncate">
+          <span className="text-sm text-fg truncate">
             {task.senderName || 'Unknown'}
           </span>
           <StatusBadge status={task.status} />
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="font-mono text-xs text-slate-500">{shortId}</span>
-          <span className="text-xs text-slate-500">{timeAgo(timestamp)}</span>
+          <span className="font-mono text-xs text-fg-muted">{shortId}</span>
+          <span className="text-xs text-fg-muted">{timeAgo(timestamp)}</span>
         </div>
       </div>
     </button>

@@ -1,9 +1,9 @@
 import type { ConnectionStatus as ConnectionStatusType } from '../types/index';
 
 const statusConfig: Record<ConnectionStatusType, { color: string; pulse: boolean; label: string }> = {
-  disconnected: { color: 'bg-slate-400', pulse: false, label: 'Not connected' },
+  disconnected: { color: 'bg-neutral-400', pulse: false, label: 'Not connected' },
   connecting: { color: 'bg-amber-500', pulse: true, label: 'Connecting...' },
-  connected: { color: 'bg-green-500', pulse: false, label: 'Connected' },
+  connected: { color: 'bg-brand', pulse: false, label: 'Connected' },
   reconnecting: { color: 'bg-amber-500', pulse: true, label: 'Reconnecting...' },
   error: { color: 'bg-red-500', pulse: false, label: 'Connection failed' },
 };
@@ -19,7 +19,7 @@ export default function ConnectionStatus({ status }: Props) {
       <span
         className={`inline-block w-2 h-2 rounded-full ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}
       />
-      <span className="text-xs text-slate-600">{config.label}</span>
+      <span className="text-xs text-fg-muted">{config.label}</span>
     </span>
   );
 }

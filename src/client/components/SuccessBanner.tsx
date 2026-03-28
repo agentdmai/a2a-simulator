@@ -20,7 +20,7 @@ export default function SuccessBanner({ message, onDismiss }: SuccessBannerProps
   if (!visible) return null;
 
   return (
-    <div className="mx-4 mt-2 px-4 py-3 bg-green-50 text-green-800 border border-green-200 rounded-md text-sm">
+    <div className="mx-4 mt-2 px-4 py-3 bg-brand/10 text-brand border border-brand/20 rounded-md text-sm">
       {message}
     </div>
   );

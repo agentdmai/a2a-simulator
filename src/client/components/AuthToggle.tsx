@@ -6,14 +6,14 @@ interface AuthToggleProps {
 export default function AuthToggle({ enabled, onToggle }: AuthToggleProps) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-slate-700">Require Authentication</span>
+      <span className="text-sm text-fg-muted">Require Authentication</span>
       <button
         type="button"
         role="switch"
         aria-checked={enabled}
         onClick={() => onToggle(!enabled)}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-          enabled ? 'bg-blue-600' : 'bg-slate-300'
+          enabled ? 'bg-brand' : 'bg-neutral-400 dark:bg-neutral-600'
         }`}
       >
         <span

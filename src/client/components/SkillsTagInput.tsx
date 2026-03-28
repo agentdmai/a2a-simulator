@@ -48,14 +48,14 @@ export default function SkillsTagInput({ skills, onChange }: SkillsTagInputProps
         {skills.map((skill) => (
           <span
             key={skill}
-            className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 py-1 px-2 rounded text-sm"
+            className="inline-flex items-center gap-1 bg-bg-alt text-fg py-1 px-2 rounded text-sm"
           >
             {skill}
             <button
               type="button"
               onClick={() => removeSkill(skill)}
               aria-label={`Remove ${skill}`}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-fg-muted hover:text-fg"
             >
               <X size={14} />
             </button>
@@ -68,7 +68,7 @@ export default function SkillsTagInput({ skills, onChange }: SkillsTagInputProps
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="Add skill (Enter or comma to add)"
-        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+        className="w-full px-3 py-2 text-sm border border-bd rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-bg text-fg"
       />
     </div>
   );

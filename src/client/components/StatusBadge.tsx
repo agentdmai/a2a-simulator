@@ -1,12 +1,12 @@
 import type { TaskState } from '../types/index';
 
 const statusStyles: Record<TaskState, string> = {
-  submitted: 'bg-blue-100 text-blue-800',
-  working: 'bg-amber-100 text-amber-800',
-  'input-required': 'bg-violet-100 text-violet-800',
-  completed: 'bg-green-100 text-green-800',
-  failed: 'bg-red-100 text-red-800',
-  canceled: 'bg-slate-100 text-slate-600',
+  submitted: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
+  working: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
+  'input-required': 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
+  completed: 'bg-brand/15 text-brand',
+  failed: 'bg-red-500/15 text-red-600 dark:text-red-400',
+  canceled: 'bg-neutral-500/15 text-fg-muted',
 };
 
 function formatStatus(status: TaskState): string {

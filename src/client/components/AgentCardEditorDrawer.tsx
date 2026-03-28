@@ -61,18 +61,18 @@ export default function AgentCardEditorDrawer({ open, onClose, onSaveSuccess }: 
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />
 
       {/* Drawer panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-[480px] z-50 bg-white border-l border-slate-200 shadow-xl overflow-y-auto flex flex-col">
+      <div className="fixed right-0 top-0 bottom-0 w-[480px] z-50 bg-bg border-l border-bd shadow-xl overflow-y-auto flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50">
-          <h3 className="text-lg font-semibold text-slate-900">Edit Agent Card</h3>
+        <div className="flex items-center justify-between p-4 border-b border-bd bg-bg-alt">
+          <h3 className="text-lg font-semibold text-fg">Edit Agent Card</h3>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="p-1 rounded hover:bg-slate-200 text-slate-500"
+            className="p-1 rounded hover:bg-bg-alt text-fg-muted"
           >
             <X size={20} />
           </button>
@@ -82,58 +82,58 @@ export default function AgentCardEditorDrawer({ open, onClose, onSaveSuccess }: 
         <div className="flex-1 p-6 space-y-6">
           {/* Agent Name */}
           <div>
-            <label className="block text-sm text-slate-700 mb-1">Agent Name</label>
+            <label className="block text-sm text-fg-muted mb-1">Agent Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-full px-3 py-2 text-sm border border-bd rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-bg text-fg"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm text-slate-700 mb-1">Description</label>
+            <label className="block text-sm text-fg-muted mb-1">Description</label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white resize-none"
+              className="w-full px-3 py-2 text-sm border border-bd rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-bg text-fg resize-none"
             />
           </div>
 
           {/* Skills */}
           <div>
-            <label className="block text-sm text-slate-700 mb-1">Skills</label>
+            <label className="block text-sm text-fg-muted mb-1">Skills</label>
             <SkillsTagInput skills={skills} onChange={setSkills} />
           </div>
 
           {/* URL (read-only) */}
           <div>
-            <label className="block text-sm text-slate-700 mb-1">URL</label>
+            <label className="block text-sm text-fg-muted mb-1">URL</label>
             <input
               type="text"
               value={url}
               readOnly
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md bg-slate-100 text-slate-500 cursor-not-allowed"
+              className="w-full px-3 py-2 text-sm border border-bd rounded-md bg-bg-alt text-fg-muted cursor-not-allowed"
             />
           </div>
 
           {/* Divider */}
-          <hr className="border-slate-200" />
+          <hr className="border-bd" />
 
           {/* Auth section */}
           <div className="space-y-4">
             <AuthToggle enabled={authEnabled} onToggle={setAuthEnabled} />
             {authEnabled && (
               <div>
-                <label className="block text-sm text-slate-700 mb-1">Bearer Token</label>
+                <label className="block text-sm text-fg-muted mb-1">Bearer Token</label>
                 <input
                   type="password"
                   value={authToken}
                   onChange={(e) => setAuthToken(e.target.value)}
                   placeholder="Token required from clients"
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  className="w-full px-3 py-2 text-sm border border-bd rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-bg text-fg"
                 />
               </div>
             )}
@@ -141,18 +141,18 @@ export default function AgentCardEditorDrawer({ open, onClose, onSaveSuccess }: 
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 space-y-2">
+        <div className="p-4 border-t border-bd space-y-2">
           <button
             type="button"
             onClick={handleSave}
-            className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 text-sm font-medium text-primary-fg bg-primary rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-brand"
           >
             Save Agent Card
           </button>
           <button
             type="button"
             onClick={handleDiscard}
-            className="w-full px-4 py-2 text-sm font-medium text-slate-600 bg-transparent rounded-md hover:bg-slate-100 focus:outline-none"
+            className="w-full px-4 py-2 text-sm font-medium text-fg-muted bg-transparent rounded-md hover:bg-bg-alt focus:outline-none"
           >
             Discard Changes
           </button>

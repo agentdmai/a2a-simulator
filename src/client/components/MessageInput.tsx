@@ -40,15 +40,15 @@ export default function MessageInput({ onSend, disabled, replyingTo, onClearRepl
   }
 
   return (
-    <div className="border-t border-slate-200 bg-slate-50">
+    <div className="border-t border-bd bg-bg-alt">
       {replyingTo && (
-        <div className="flex items-center gap-2 px-4 pt-3 pb-1 text-xs text-slate-500">
-          <span className="font-medium text-blue-600">Replying to {replyingTo.taskId.slice(0, 8)}</span>
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1 text-xs text-fg-muted">
+          <span className="font-medium text-brand">Replying to {replyingTo.taskId.slice(0, 8)}</span>
           <span className="truncate max-w-[200px]">"{replyingTo.lastMessage}"</span>
           <button
             type="button"
             onClick={onClearReply}
-            className="ml-auto text-slate-400 hover:text-slate-600"
+            className="ml-auto text-fg-muted hover:text-fg"
             aria-label="Cancel reply"
           >
             ✕
@@ -65,7 +65,7 @@ export default function MessageInput({ onSend, disabled, replyingTo, onClearRepl
         placeholder="Type a message..."
         rows={1}
         disabled={disabled}
-        className={`flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 max-h-[6rem] overflow-y-auto ${
+        className={`flex-1 resize-none rounded-lg border border-bd bg-bg text-fg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand max-h-[6rem] overflow-y-auto ${
           disabled ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       />
@@ -73,8 +73,8 @@ export default function MessageInput({ onSend, disabled, replyingTo, onClearRepl
         type="button"
         onClick={send}
         disabled={!canSend}
-        className={`bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium ${
-          !canSend ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+        className={`bg-primary text-primary-fg px-4 py-2 rounded-lg text-sm font-medium ${
+          !canSend ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90'
         }`}
       >
         Send
