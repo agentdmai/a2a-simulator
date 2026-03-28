@@ -60,11 +60,12 @@ Plans:
   3. User can edit their agent's name, description, and skills via the UI, with changes reflected immediately in the served Agent Card
   4. User can configure auth tokens for outgoing connections and set bearer token requirements for their own endpoint
   5. User can create/attach artifacts, cancel tasks, and resubscribe to SSE streams for existing tasks
-**Plans:** 2 plans
+**Plans:** 3 plans
 
 Plans:
 - [x] 03-01-PLAN.md — Server mode UI: incoming task panel, response composer, state control, artifacts, cancel/resubscribe
 - [x] 03-02-PLAN.md — Agent Card editor, authentication (outgoing and incoming), auth error handling
+- [ ] 03-03-PLAN.md — Gap closure: SSE event listener wiring, SuccessBanner mount race fix
 
 ## Progress
 
@@ -75,4 +76,4 @@ Phases execute in numeric order: 1 -> 2 -> 3
 |-------|----------------|--------|-----------|
 | 1. Protocol Foundation | 2/2 | Complete   | 2026-03-28 |
 | 2. Client UI and Streaming | 3/3 | Complete | 2026-03-27 |
-| 3. Server Mode and Completeness | 1/2 | In Progress | - |
+| 3. Server Mode and Completeness | 2/3 | In Progress | - |
