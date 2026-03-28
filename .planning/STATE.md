@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-28T04:00:00.000Z"
-last_activity: 2026-03-28 -- Completed 03-01 server mode UI plan
+status: verifying
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-03-28T03:24:43.168Z"
+last_activity: 2026-03-28
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 86
 ---
 
@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 Phase: 03 (server-mode-and-completeness) — EXECUTING
 Plan: 2 of 2
-Status: Executing Phase 03
-Last activity: 2026-03-28 -- Completed 03-01 server mode UI plan
+Status: Phase complete — ready for verification
+Last activity: 2026-03-28
 
 Progress: [████████░░] 86%
 
@@ -58,6 +58,7 @@ Progress: [████████░░] 86%
 | Phase 02 P02 | 8min | 3 tasks | 9 files |
 | Phase 02 P03 | 5min | 3 tasks | 5 files |
 | Phase 03 P01 | 12min | 3 tasks | 23 files |
+| Phase 03 P02 | 15min | 3 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 03]: Non-terminal reply states keep task in pendingTasks for follow-up responses
 - [Phase 03]: Artifacts published via eventBus before status-update for SDK compatibility
 - [Phase 03]: SSEBridge shared between executor and reply router for real-time browser updates
+- [Phase 03]: In-place mutation of agentCard properties to maintain DefaultRequestHandler reference
+- [Phase 03]: Auth middleware skips /api/* and non-.well-known GET requests to avoid blocking SPA
+- [Phase 03]: Custom fetch wrapper for outgoing auth instead of modifying SDK internals
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T04:00:00.000Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-03-28T03:24:43.165Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None

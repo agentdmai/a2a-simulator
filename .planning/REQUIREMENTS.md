@@ -37,14 +37,14 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **UI-01**: Chat-style interface showing incoming and outgoing messages with sender, timestamp, and status indicators
 - [x] **UI-02**: Task lifecycle visualization with state badges and transition history
 - [x] **UI-03**: Raw JSON-RPC message view for inspecting wire-format requests and responses
-- [ ] **UI-04**: Agent Card configuration editor — edit own agent's name, description, skills; changes reflected immediately
+- [x] **UI-04**: Agent Card configuration editor — edit own agent's name, description, skills; changes reflected immediately
 - [x] **UI-05**: Connection panel for entering remote agent URL and viewing connection status
 - [x] **UI-06**: Message input for composing and sending messages to connected agents
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can configure auth tokens/API keys for outgoing connections to secured agents
-- [ ] **AUTH-02**: User can set auth requirements for own server endpoint (bearer token validation)
+- [x] **AUTH-01**: User can configure auth tokens/API keys for outgoing connections to secured agents
+- [x] **AUTH-02**: User can set auth requirements for own server endpoint (bearer token validation)
 
 ### Streaming
 
@@ -105,11 +105,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-01 | Phase 2 | Complete |
 | UI-02 | Phase 2 | Complete |
 | UI-03 | Phase 2 | Complete |
-| UI-04 | Phase 3 | Pending |
+| UI-04 | Phase 3 | Complete |
 | UI-05 | Phase 2 | Complete |
 | UI-06 | Phase 2 | Complete |
-| AUTH-01 | Phase 3 | Pending |
-| AUTH-02 | Phase 3 | Pending |
+| AUTH-01 | Phase 3 | Complete |
+| AUTH-02 | Phase 3 | Complete |
 | STRM-01 | Phase 2 | Complete |
 | STRM-02 | Phase 2 | Complete |
 | STRM-03 | Phase 2 | Complete |

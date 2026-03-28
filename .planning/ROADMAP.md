@@ -64,7 +64,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Server mode UI: incoming task panel, response composer, state control, artifacts, cancel/resubscribe
-- [ ] 03-02-PLAN.md — Agent Card editor, authentication (outgoing and incoming), auth error handling
+- [x] 03-02-PLAN.md — Agent Card editor, authentication (outgoing and incoming), auth error handling
 
 ## Progress
 
