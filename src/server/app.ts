@@ -45,7 +45,7 @@ export function createApp(opts: { port: number; name: string; description: strin
   const clientDistPath = path.join(__dirname, '../../dist/client');
   if (fs.existsSync(clientDistPath)) {
     app.use(express.static(clientDistPath));
-    app.get('*', (_req, res) => {
+    app.get('{*path}', (_req, res) => {
       res.sendFile(path.join(clientDistPath, 'index.html'));
     });
   }
