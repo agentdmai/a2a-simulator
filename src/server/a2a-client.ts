@@ -1,4 +1,4 @@
-import { ClientFactory } from '@a2a-js/sdk/client';
+import { ClientFactory, ClientFactoryOptions, DefaultAgentCardResolver, JsonRpcTransportFactory, RestTransportFactory } from '@a2a-js/sdk/client';
 import type { Client } from '@a2a-js/sdk/client';
 import type { AgentCard, Message, Task, TaskStatusUpdateEvent, TaskArtifactUpdateEvent, MessageSendParams, TaskQueryParams } from '@a2a-js/sdk';
 
@@ -9,8 +9,25 @@ export class A2AClientManager {
   private client: Client | null = null;
   private card: AgentCard | null = null;
 
-  async connect(baseUrl: string): Promise<AgentCard> {
-    const factory = new ClientFactory();
+  async connect(baseUrl: string, authToken?: string): Promise<AgentCard> {
+    let factory: ClientFactory;
+    if (authToken) {
+      const authFetch: typeof fetch = (input, init?) => {
+        const headers = new Headers(init?.headers);
+        headers.set('Authorization', `Bearer ${authToken}`);
+        return fetch(input, { ...init, headers });
+      };
+      const options = ClientFactoryOptions.createFrom(ClientFactoryOptions.default, {
+        transports: [
+          new JsonRpcTransportFactory({ fetchImpl: authFetch }),
+          new RestTransportFactory({ fetchImpl: authFetch }),
+        ],
+        cardResolver: new DefaultAgentCardResolver({ fetchImpl: authFetch }),
+      });
+      factory = new ClientFactory(options);
+    } else {
+      factory = new ClientFactory();
+    }
     this.client = await factory.createFromUrl(baseUrl);
     this.card = await this.client.getAgentCard();
     return this.card;
