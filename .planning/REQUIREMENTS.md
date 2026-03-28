@@ -19,8 +19,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLNT-01**: User can connect to a remote agent by entering its base URL or agent card URL
 - [x] **CLNT-02**: Remote agent's Agent Card is fetched, validated, and displayed (name, description, skills, capabilities)
 - [x] **CLNT-03**: User can send messages to connected agent via message/send (JSON-RPC)
-- [ ] **CLNT-04**: User can send streaming messages via message/stream with real-time SSE event rendering
-- [ ] **CLNT-05**: User can fetch task status by ID (tasks/get)
+- [x] **CLNT-04**: User can send streaming messages via message/stream with real-time SSE event rendering
+- [x] **CLNT-05**: User can fetch task status by ID (tasks/get)
 - [ ] **CLNT-06**: User can cancel a task (tasks/cancel)
 - [ ] **CLNT-07**: User can resubscribe to SSE stream for existing task (tasks/resubscribe)
 
@@ -38,7 +38,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **UI-02**: Task lifecycle visualization with state badges and transition history
 - [ ] **UI-03**: Raw JSON-RPC message view for inspecting wire-format requests and responses
 - [ ] **UI-04**: Agent Card configuration editor — edit own agent's name, description, skills; changes reflected immediately
-- [ ] **UI-05**: Connection panel for entering remote agent URL and viewing connection status
+- [x] **UI-05**: Connection panel for entering remote agent URL and viewing connection status
 - [ ] **UI-06**: Message input for composing and sending messages to connected agents
 
 ### Authentication
@@ -48,9 +48,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Streaming
 
-- [ ] **STRM-01**: SSE streaming from remote agents renders events incrementally in the chat UI
-- [ ] **STRM-02**: Two-layer SSE architecture: protocol-level SSE (agent-to-agent) and UI-level SSE (server-to-browser)
-- [ ] **STRM-03**: SSE connections have proper lifecycle management (cleanup on disconnect, no memory leaks)
+- [x] **STRM-01**: SSE streaming from remote agents renders events incrementally in the chat UI
+- [x] **STRM-02**: Two-layer SSE architecture: protocol-level SSE (agent-to-agent) and UI-level SSE (server-to-browser)
+- [x] **STRM-03**: SSE connections have proper lifecycle management (cleanup on disconnect, no memory leaks)
 
 ## v2 Requirements
 
@@ -93,8 +93,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLNT-01 | Phase 1 | Complete |
 | CLNT-02 | Phase 1 | Complete |
 | CLNT-03 | Phase 1 | Complete |
-| CLNT-04 | Phase 2 | Pending |
-| CLNT-05 | Phase 2 | Pending |
+| CLNT-04 | Phase 2 | Complete |
+| CLNT-05 | Phase 2 | Complete |
 | CLNT-06 | Phase 3 | Pending |
 | CLNT-07 | Phase 3 | Pending |
 | SRVR-01 | Phase 1 | Complete |
@@ -106,13 +106,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-02 | Phase 2 | Pending |
 | UI-03 | Phase 2 | Pending |
 | UI-04 | Phase 3 | Pending |
-| UI-05 | Phase 2 | Pending |
+| UI-05 | Phase 2 | Complete |
 | UI-06 | Phase 2 | Pending |
 | AUTH-01 | Phase 3 | Pending |
 | AUTH-02 | Phase 3 | Pending |
-| STRM-01 | Phase 2 | Pending |
-| STRM-02 | Phase 2 | Pending |
-| STRM-03 | Phase 2 | Pending |
+| STRM-01 | Phase 2 | Complete |
+| STRM-02 | Phase 2 | Complete |
+| STRM-03 | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total

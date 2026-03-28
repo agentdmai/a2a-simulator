@@ -46,7 +46,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Vite + React scaffold, server API routes (connect/send/events/task), SSE bridge, ConnectionContext, hooks, and connection panel
+- [x] 02-01-PLAN.md — Vite + React scaffold, server API routes (connect/send/events/task), SSE bridge, ConnectionContext, hooks, and connection panel
 - [ ] 02-02-PLAN.md — Chat components (MessageBubble, MessageInput, TaskThread, StatusBadge, JsonDrawer, StreamingIndicator), wired into App layout
 
 ### Phase 3: Server Mode and Completeness
