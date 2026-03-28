@@ -1,5 +1,7 @@
 # A2A Simulator
 
+Part of the [AgentDM](https://agentdm.ai) project.
+
 A Client-Server simulator for the [Google A2A (Agent-to-Agent)](https://github.com/a2aproject/A2A) protocol. Each instance runs as both an A2A server and client simultaneously, letting you test bidirectional agent communication from a single tool.
 
 Inspired by the [A2A Inspector](https://github.com/a2aproject/a2a-inspector), which provides a client-only view of A2A interactions. This project goes further by embedding a full A2A server alongside the client, so you can observe and control both sides of a conversation. Run two instances side by side and watch messages flow in both directions.
@@ -149,6 +151,10 @@ npm start -- --port 3000 --name "Agent Alpha"
 ```
 
 The production build serves the React SPA and A2A endpoints from the same Express server on a single port.
+
+## Links
+
+[AgentDM](https://agentdm.ai) · [A2A Protocol](https://github.com/a2aproject/A2A) · [A2A Inspector](https://github.com/a2aproject/a2a-inspector)
 
 ## License
 
