@@ -36,7 +36,45 @@ Open `http://localhost:5173` (Vite dev server proxies to port 3000 by default). 
 
 To see Agent Beta's perspective, open its Vite dev server on a different port or build and serve both instances.
 
-### WebStorm / IDE Setup
+### VS Code Setup
+
+Add these to your `.vscode/launch.json` to run both agents from the editor:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Agent Alpha (:3000)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/server/index.ts", "--port", "3000", "--name", "Agent Alpha"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Agent Beta (:3001)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/server/index.ts", "--port", "3001", "--name", "Agent Beta"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Both Agents",
+      "configurations": ["Agent Alpha (:3000)", "Agent Beta (:3001)"]
+    }
+  ]
+}
+```
+
+Use the "Both Agents" compound launch to start both instances at once.
+
+### WebStorm / JetBrains
 
 The CLI args (`--port`, `--name`, `--description`) map directly to run configuration parameters. Create two Node.js run configurations pointing at `src/server/index.ts` with different port and name arguments.
 

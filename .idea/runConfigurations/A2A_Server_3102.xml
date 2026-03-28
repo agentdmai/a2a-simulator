@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="A2A Server :3102" type="NodeJSConfigurationType" working-dir="$PROJECT_DIR$">
-    <envs>
-      <env name="PORT" value="3102" />
-      <env name="PUBLIC_URL" value="http://localhost:3102" />
-    </envs>
-    <method v="2" />
-  </configuration>
-</component>
