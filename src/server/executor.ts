@@ -3,7 +3,7 @@ import type {
   ExecutionEventBus,
   RequestContext,
 } from '@a2a-js/sdk/server';
-import type { Task, TaskStatusUpdateEvent } from '@a2a-js/sdk';
+import type { TaskStatusUpdateEvent } from '@a2a-js/sdk';
 import type { AppState } from './state.js';
 import type { SSEBridge } from './sse-bridge.js';
 
@@ -20,28 +20,15 @@ export class UIBridgeExecutor implements AgentExecutor {
     // stay grouped under the same task in the browser UI
     const contextId = isFollowUp ? ctx.task!.contextId : ctx.contextId;
 
-    // Publish task object first so the SDK's ResultManager registers it
-    const task: Task = {
-      id: taskId,
-      contextId,
-      kind: 'task',
-      status: {
-        state: 'input-required',
-        message: ctx.userMessage,
-        timestamp: new Date().toISOString(),
-      },
-      history: isFollowUp ? [...(ctx.task!.history || []), ctx.userMessage] : [ctx.userMessage],
-    };
-    eventBus.publish(task);
-
-    // Then publish status-update event for input-required state
+    // Publish only the status-update event — the SDK manages the Task object
+    // internally. Publishing a separate Task would cause the SDK to stream
+    // duplicate events to the remote client.
     const event: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId,
       contextId,
       status: {
         state: 'input-required',
-        message: ctx.userMessage,
         timestamp: new Date().toISOString(),
       },
       final: false, // Not terminal -- waiting for human input

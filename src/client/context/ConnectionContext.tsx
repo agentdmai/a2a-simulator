@@ -181,10 +181,9 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
               );
             } else if (finalText) {
               // No streaming message existed, add the final message
-              // Deduplicate: SDK may send multiple status-updates for the same terminal state
-              const isDuplicate = msg?.messageId
-                ? updated.messages.some(m => m.id === msg.messageId)
-                : updated.messages.some(m => m.text === finalText && m.taskState === statusObj.state);
+              // Deduplicate by text+state: SDK sends multiple events for terminal states
+              // with different messageIds, so messageId alone isn't reliable
+              const isDuplicate = updated.messages.some(m => m.text === finalText && m.taskState === statusObj.state);
               if (!isDuplicate) {
                 updated.messages = [...updated.messages, {
                   id: msg?.messageId || crypto.randomUUID(),
@@ -202,9 +201,7 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
               const msg = statusObj.message as { role?: string; parts?: Array<{ kind?: string; text?: string }>; messageId?: string };
               const msgText = msg.parts?.[0]?.text;
               if (msgText && msg.role === 'agent') {
-                const isDuplicate = msg.messageId
-                  ? updated.messages.some(m => m.id === msg.messageId)
-                  : updated.messages.some(m => m.text === msgText && m.taskState === statusObj.state);
+                const isDuplicate = updated.messages.some(m => m.text === msgText && m.taskState === statusObj.state);
                 if (!isDuplicate) {
                   updated.messages = [...updated.messages, {
                     id: msg.messageId || crypto.randomUUID(),
