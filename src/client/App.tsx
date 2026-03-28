@@ -6,14 +6,12 @@ import ConnectionPanel from './components/ConnectionPanel';
 import IncomingTaskList from './components/IncomingTaskList';
 import ChatPanel from './components/ChatPanel';
 import AgentCardEditorDrawer from './components/AgentCardEditorDrawer';
-import SuccessBanner from './components/SuccessBanner';
-import type { SSEStatus, TaskEventPayload, IncomingTaskPayload } from './types/index';
+import type { SSEStatus, TaskEventPayload, IncomingTaskPayload, AgentCardInfo } from './types/index';
 
 function AppContent() {
   const { state, dispatch } = useConnection();
   const [activeTab, setActiveTab] = useState<'connection' | 'incoming'>('connection');
   const [editorOpen, setEditorOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSSEEvent = useCallback((event: string, data: unknown) => {
     if (event === 'task-event') {
@@ -29,6 +27,18 @@ function AppContent() {
           break;
         }
       }
+    } else if (event === 'connection-status') {
+      const payload = data as { status: string; agentCard?: AgentCardInfo };
+      if (payload.status === 'connected' && payload.agentCard) {
+        dispatch({ type: 'CONNECTED', agentCard: payload.agentCard });
+      } else if (payload.status === 'disconnected') {
+        dispatch({ type: 'DISCONNECTED' });
+      }
+    } else if (event === 'reply-sent') {
+      // Confirmation that server sent a reply for an incoming task.
+      // The reply-handler already publishes via eventBus which triggers task-event SSE.
+      // This is a supplementary notification -- log for debugging.
+      console.debug('reply-sent', data);
     }
   }, [dispatch, state.tasks]);
 
@@ -62,7 +72,6 @@ function AppContent() {
         )}
       </LeftPanelTabs>
       <div className="flex-1 flex flex-col min-w-0">
-        {successMessage && <SuccessBanner message={successMessage} />}
         <ChatPanel />
       </div>
       <AgentCardEditorDrawer

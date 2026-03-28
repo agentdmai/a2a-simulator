@@ -39,6 +39,18 @@ export function useSSE(url: string, onEvent: SSEEventHandler, onStatus?: SSEStat
         onEventRef.current('stream-error', JSON.parse(e.data));
       });
 
+      es.addEventListener('incoming-task', (e) => {
+        onEventRef.current('incoming-task', JSON.parse(e.data));
+      });
+
+      es.addEventListener('task-canceled', (e) => {
+        onEventRef.current('task-canceled', JSON.parse(e.data));
+      });
+
+      es.addEventListener('reply-sent', (e) => {
+        onEventRef.current('reply-sent', JSON.parse(e.data));
+      });
+
       es.onerror = () => {
         es?.close();
         if (destroyed) return;
