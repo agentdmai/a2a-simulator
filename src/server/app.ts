@@ -18,10 +18,11 @@ import { createApiRouter } from './api-routes.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export function createApp(opts: { port: number; name: string; description: string }) {
-  const state = createAppState();
   const agentCard = buildAgentCard(opts);
+  const state = createAppState(agentCard);
   const taskStore = new InMemoryTaskStore();
-  const executor = new UIBridgeExecutor(state);
+  const sseBridge = new SSEBridge();
+  const executor = new UIBridgeExecutor(state, sseBridge);
   const requestHandler = new DefaultRequestHandler(agentCard, taskStore, executor);
   const a2aApp = new A2AExpressApp(requestHandler);
 
@@ -34,11 +35,10 @@ export function createApp(opts: { port: number; name: string; description: strin
   a2aApp.setupRoutes(app, '');
 
   // 3. Reply router (existing /api/pending, /api/reply)
-  app.use(createReplyRouter(state));
+  app.use(createReplyRouter(state, sseBridge));
 
   // 4. API router (new /api/connect, /api/send, /api/events, /api/task/:id, /api/disconnect)
   const clientManager = new A2AClientManager();
-  const sseBridge = new SSEBridge();
   app.use(createApiRouter(clientManager, sseBridge));
 
   // 5. Static file serving + SPA fallback (production only)

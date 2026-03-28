@@ -5,9 +5,10 @@ import type {
 } from '@a2a-js/sdk/server';
 import type { Task, TaskStatusUpdateEvent } from '@a2a-js/sdk';
 import type { AppState } from './state.js';
+import type { SSEBridge } from './sse-bridge.js';
 
 export class UIBridgeExecutor implements AgentExecutor {
-  constructor(private state: AppState) {}
+  constructor(private state: AppState, private sseBridge: SSEBridge) {}
 
   async execute(ctx: RequestContext, eventBus: ExecutionEventBus): Promise<void> {
     const taskId = ctx.taskId;
@@ -44,6 +45,15 @@ export class UIBridgeExecutor implements AgentExecutor {
     // Store event bus reference for later reply
     this.state.pendingTasks.set(taskId, { eventBus, ctx });
     console.log(`Task ${taskId} awaiting human response`);
+
+    // Broadcast incoming task to browser SSE clients
+    this.sseBridge.broadcast('incoming-task', {
+      taskId,
+      contextId,
+      message: ctx.userMessage,
+      status: 'input-required',
+      timestamp: new Date().toISOString(),
+    });
   }
 
   async cancelTask(taskId: string, eventBus: ExecutionEventBus): Promise<void> {
@@ -59,5 +69,8 @@ export class UIBridgeExecutor implements AgentExecutor {
       final: true,
     };
     eventBus.publish(event);
+
+    // Broadcast cancellation to browser SSE clients
+    this.sseBridge.broadcast('task-canceled', { taskId });
   }
 }

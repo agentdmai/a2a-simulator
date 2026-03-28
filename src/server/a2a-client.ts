@@ -29,6 +29,16 @@ export class A2AClientManager {
     return this.client.getTask(params);
   }
 
+  async cancelTask(params: { id: string }): Promise<Task> {
+    if (!this.client) throw new Error('Not connected to any agent');
+    return this.client.cancelTask(params);
+  }
+
+  async *resubscribeTask(params: { id: string }): AsyncGenerator<StreamEventData> {
+    if (!this.client) throw new Error('Not connected to any agent');
+    yield* this.client.resubscribeTask(params);
+  }
+
   disconnect(): void {
     this.client = null;
     this.card = null;

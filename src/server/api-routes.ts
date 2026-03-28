@@ -70,6 +70,29 @@ export function createApiRouter(clientManager: A2AClientManager, sseBridge: SSEB
     }
   });
 
+  // Cancel outgoing task
+  router.post('/api/task/:id/cancel', async (req, res) => {
+    try {
+      if (!clientManager.isConnected) { res.status(400).json({ error: 'Not connected' }); return; }
+      const task = await clientManager.cancelTask({ id: req.params.id });
+      res.json(task);
+    } catch (err) {
+      res.status(400).json({ error: (err as Error).message });
+    }
+  });
+
+  // Resubscribe to task stream
+  router.post('/api/task/:id/resubscribe', async (req, res) => {
+    try {
+      if (!clientManager.isConnected) { res.status(400).json({ error: 'Not connected' }); return; }
+      res.json({ ok: true });
+      const stream = clientManager.resubscribeTask({ id: req.params.id });
+      sseBridge.relayStream(req.params.id, stream).catch(console.error);
+    } catch (err) {
+      res.status(400).json({ error: (err as Error).message });
+    }
+  });
+
   // SSE endpoint for browser clients
   router.get('/api/events', (req, res) => {
     sseBridge.addClient(res);

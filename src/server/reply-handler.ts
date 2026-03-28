@@ -1,9 +1,23 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import type { TaskStatusUpdateEvent } from '@a2a-js/sdk';
+import type { TaskStatusUpdateEvent, TaskArtifactUpdateEvent } from '@a2a-js/sdk';
 import type { AppState } from './state.js';
+import type { SSEBridge } from './sse-bridge.js';
 
-export function createReplyRouter(state: AppState): Router {
+interface ReplyArtifact {
+  name: string;
+  mimeType: string;
+  content: string;
+}
+
+interface ReplyBody {
+  taskId: string;
+  text: string;
+  state: 'working' | 'input-required' | 'completed' | 'failed';
+  artifacts?: ReplyArtifact[];
+}
+
+export function createReplyRouter(state: AppState, sseBridge: SSEBridge): Router {
   const router = Router();
 
   // List all pending tasks awaiting human response
@@ -17,10 +31,15 @@ export function createReplyRouter(state: AppState): Router {
 
   // Reply to a pending task
   router.post('/api/reply', (req, res) => {
-    const { taskId, text } = req.body as { taskId: string; text: string };
+    const { taskId, text, state: selectedState, artifacts } = req.body as ReplyBody;
 
     if (!taskId || !text) {
       res.status(400).json({ error: 'taskId and text are required' });
+      return;
+    }
+
+    if (!selectedState) {
+      res.status(400).json({ error: 'state is required' });
       return;
     }
 
@@ -32,13 +51,34 @@ export function createReplyRouter(state: AppState): Router {
 
     const { eventBus, ctx } = pending;
 
-    // Publish completed status with agent's response message
+    // Publish artifact events BEFORE status update
+    if (artifacts && artifacts.length > 0) {
+      for (const artifact of artifacts) {
+        const artifactEvent: TaskArtifactUpdateEvent = {
+          kind: 'artifact-update',
+          taskId,
+          contextId: ctx.contextId,
+          artifact: {
+            artifactId: uuidv4(),
+            name: artifact.name,
+            parts: [{ kind: 'text', text: artifact.content }],
+          },
+          lastChunk: true,
+        };
+        eventBus.publish(artifactEvent);
+      }
+    }
+
+    // Determine if this is a terminal state
+    const isTerminal = selectedState === 'completed' || selectedState === 'failed';
+
+    // Publish status update with agent's response message
     const event: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId,
       contextId: ctx.contextId,
       status: {
-        state: 'completed',
+        state: selectedState,
         message: {
           kind: 'message',
           messageId: uuidv4(),
@@ -47,12 +87,17 @@ export function createReplyRouter(state: AppState): Router {
         },
         timestamp: new Date().toISOString(),
       },
-      final: true,
+      final: isTerminal,
     };
     eventBus.publish(event);
 
-    // Remove from pending
-    state.pendingTasks.delete(taskId);
+    // Only remove from pending for terminal states
+    if (isTerminal) {
+      state.pendingTasks.delete(taskId);
+    }
+
+    // Broadcast reply confirmation to browser SSE clients
+    sseBridge.broadcast('reply-sent', { taskId, state: selectedState });
 
     res.json({ ok: true, taskId });
   });
