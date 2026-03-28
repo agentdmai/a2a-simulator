@@ -1,6 +1,7 @@
 import type { ChatMessage } from '../types/index';
 import { useRelativeTime } from '../hooks/useRelativeTime';
 import StreamingIndicator from './StreamingIndicator';
+import StatusBadge from './StatusBadge';
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -25,12 +26,15 @@ export default function MessageBubble({ message, direction, onViewRaw }: Message
       <p className="text-sm whitespace-pre-wrap">{message.text}</p>
       {message.isStreaming && <StreamingIndicator />}
       <div className="flex items-center justify-between gap-2 mt-1">
-        <span
-          className={`text-xs ${timeClasses}`}
-          title={message.timestamp}
-        >
-          {relativeTime}
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-xs ${timeClasses}`}
+            title={message.timestamp}
+          >
+            {relativeTime}
+          </span>
+          {message.taskState && <StatusBadge status={message.taskState} />}
+        </div>
         {onViewRaw && (
           <button
             type="button"

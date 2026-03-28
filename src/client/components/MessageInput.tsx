@@ -3,9 +3,11 @@ import { useState, useRef, type KeyboardEvent, type FormEvent } from 'react';
 interface MessageInputProps {
   onSend: (text: string) => void;
   disabled: boolean;
+  replyingTo?: { taskId: string; lastMessage: string } | null;
+  onClearReply?: () => void;
 }
 
-export default function MessageInput({ onSend, disabled }: MessageInputProps) {
+export default function MessageInput({ onSend, disabled, replyingTo, onClearReply }: MessageInputProps) {
   const [text, setText] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -38,7 +40,22 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
   }
 
   return (
-    <div className="flex items-end gap-2 p-4 border-t border-slate-200 bg-slate-50">
+    <div className="border-t border-slate-200 bg-slate-50">
+      {replyingTo && (
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1 text-xs text-slate-500">
+          <span className="font-medium text-blue-600">Replying to {replyingTo.taskId.slice(0, 8)}</span>
+          <span className="truncate max-w-[200px]">"{replyingTo.lastMessage}"</span>
+          <button
+            type="button"
+            onClick={onClearReply}
+            className="ml-auto text-slate-400 hover:text-slate-600"
+            aria-label="Cancel reply"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      <div className="flex items-end gap-2 p-4 pt-2">
       <textarea
         ref={textareaRef}
         value={text}
@@ -62,6 +79,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
       >
         Send
       </button>
+      </div>
     </div>
   );
 }

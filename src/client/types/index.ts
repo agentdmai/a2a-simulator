@@ -23,6 +23,7 @@ export interface ChatMessage {
   text: string;
   timestamp: string; // ISO string
   isStreaming?: boolean;
+  taskState?: TaskState; // The state transition this message carried (working/completed/input-required)
 }
 
 // Artifact data for display
@@ -43,6 +44,7 @@ export interface TaskData {
   direction: 'outgoing' | 'incoming';
   senderName?: string;
   artifacts?: ArtifactData[];
+  remoteTaskId?: string; // B's taskId — needed when A replies to input-required
 }
 
 // Raw JSON-RPC exchange for the drawer
@@ -100,4 +102,5 @@ export type ConnectionAction =
   | { type: 'SELECT_TASK'; contextId: string | null }
   | { type: 'AUTH_ERROR'; error: string }
   | { type: 'CLEAR_AUTH_ERROR' }
-  | { type: 'OWN_AGENT_CARD_LOADED'; card: AgentCardInfo };
+  | { type: 'OWN_AGENT_CARD_LOADED'; card: AgentCardInfo }
+  | { type: 'REPLY_SENT'; contextId: string; text: string; state: TaskState };

@@ -12,7 +12,13 @@ export class UIBridgeExecutor implements AgentExecutor {
 
   async execute(ctx: RequestContext, eventBus: ExecutionEventBus): Promise<void> {
     const taskId = ctx.taskId;
-    const contextId = ctx.contextId;
+
+    // Detect follow-up: ctx.task exists when SDK loaded an existing task from store
+    const isFollowUp = ctx.task != null;
+
+    // For follow-ups, preserve the original task's contextId so SSE events
+    // stay grouped under the same task in the browser UI
+    const contextId = isFollowUp ? ctx.task!.contextId : ctx.contextId;
 
     // Publish task object first so the SDK's ResultManager registers it
     const task: Task = {
@@ -24,7 +30,7 @@ export class UIBridgeExecutor implements AgentExecutor {
         message: ctx.userMessage,
         timestamp: new Date().toISOString(),
       },
-      history: [ctx.userMessage],
+      history: isFollowUp ? [...(ctx.task!.history || []), ctx.userMessage] : [ctx.userMessage],
     };
     eventBus.publish(task);
 
@@ -42,26 +48,30 @@ export class UIBridgeExecutor implements AgentExecutor {
     };
     eventBus.publish(event);
 
-    // Store event bus reference for later reply
+    // Update event bus reference (same taskId on follow-up)
     this.state.pendingTasks.set(taskId, { eventBus, ctx });
-    console.log(`Task ${taskId} awaiting human response`);
+    console.log(`Task ${taskId} ${isFollowUp ? '(follow-up)' : '(new)'} awaiting human response`);
 
-    // Broadcast incoming task to browser SSE clients
+    // Broadcast incoming task/message to browser SSE clients
+    // Use contextId as the grouping key so B's UI appends to the existing thread
     this.sseBridge.broadcast('incoming-task', {
       taskId,
       contextId,
       message: ctx.userMessage,
       status: 'input-required',
       timestamp: new Date().toISOString(),
+      isFollowUp,
     });
   }
 
   async cancelTask(taskId: string, eventBus: ExecutionEventBus): Promise<void> {
+    const pending = this.state.pendingTasks.get(taskId);
+    const contextId = pending?.ctx.contextId || '';
     this.state.pendingTasks.delete(taskId);
     const event: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId,
-      contextId: '',
+      contextId,
       status: {
         state: 'canceled',
         timestamp: new Date().toISOString(),
@@ -71,6 +81,6 @@ export class UIBridgeExecutor implements AgentExecutor {
     eventBus.publish(event);
 
     // Broadcast cancellation to browser SSE clients
-    this.sseBridge.broadcast('task-canceled', { taskId });
+    this.sseBridge.broadcast('task-canceled', { taskId, contextId });
   }
 }

@@ -16,11 +16,11 @@ export function useApi() {
     await fetch(`${API_BASE}/api/disconnect`, { method: 'POST' });
   }
 
-  async function sendMessage(text: string): Promise<{ ok: boolean; messageId?: string; contextId?: string; error?: string }> {
+  async function sendMessage(text: string, taskId?: string, groupContextId?: string): Promise<{ ok: boolean; messageId?: string; contextId?: string; error?: string }> {
     const res = await fetch(`${API_BASE}/api/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, taskId: taskId || undefined, groupContextId: groupContextId || undefined }),
     });
     return res.json();
   }

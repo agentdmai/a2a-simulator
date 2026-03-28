@@ -73,7 +73,7 @@ export function createApiRouter(clientManager: A2AClientManager, sseBridge: SSEB
   // Send message (streaming) to connected agent
   router.post('/api/send', async (req, res) => {
     try {
-      const { text } = req.body as { text: string };
+      const { text, taskId: existingTaskId, groupContextId } = req.body as { text: string; taskId?: string; groupContextId?: string };
       if (!text) { res.status(400).json({ error: 'text is required' }); return; }
       if (!clientManager.isConnected) { res.status(400).json({ error: 'Not connected to any agent' }); return; }
 
@@ -85,16 +85,22 @@ export function createApiRouter(clientManager: A2AClientManager, sseBridge: SSEB
           messageId,
           role: 'user',
           parts: [{ kind: 'text', text }],
-          contextId,
+          // For follow-ups, only send taskId — omit contextId so the remote SDK
+          // uses the existing task's contextId instead of creating a new task
+          ...(existingTaskId
+            ? { taskId: existingTaskId }
+            : { contextId }),
         },
       };
+      // Use the original contextId for SSE grouping when replying to a task
+      const sseContextId = groupContextId || contextId;
       // Capture raw request for JSON-RPC exchange view
       const rawRequest = JSON.parse(JSON.stringify(params));
       // Return task reference immediately so UI can correlate SSE events
-      res.json({ ok: true, messageId, contextId });
+      res.json({ ok: true, messageId, contextId: sseContextId });
       // Stream in background, relay via SSE bridge
       const stream = clientManager.sendStreaming(params);
-      sseBridge.relayStream(contextId, stream, rawRequest).catch((err) => {
+      sseBridge.relayStream(sseContextId, stream, rawRequest).catch((err) => {
         console.error('Stream relay error:', err);
       });
     } catch (err) {

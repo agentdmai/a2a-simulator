@@ -40,9 +40,18 @@ export default function ChatPanel() {
     userScrolledUp.current = el.scrollTop + el.clientHeight < el.scrollHeight - 50;
   }, []);
 
+  // Track which task A is replying to (input-required tasks only)
+  const [replyingToTaskId, setReplyingToTaskId] = useState<string | null>(null);
+  const replyingToTask = replyingToTaskId ? state.tasks.get(replyingToTaskId) : null;
+  const replyInfo = replyingToTask && replyingToTask.status === 'input-required' && replyingToTask.remoteTaskId
+    ? { taskId: replyingToTask.remoteTaskId, contextId: replyingToTaskId!, lastMessage: replyingToTask.messages[replyingToTask.messages.length - 1]?.text || '' }
+    : null;
+
   async function handleSend(text: string) {
     setSendError(null);
-    const result = await api.sendMessage(text);
+    // If replying to an input-required task, pass the remote taskId and group contextId
+    const result = await api.sendMessage(text, replyInfo?.taskId, replyInfo?.contextId);
+    if (result.ok) setReplyingToTaskId(null);
     if (result.ok && result.contextId) {
       dispatch({
         type: 'MESSAGE_SENT',
@@ -79,7 +88,8 @@ export default function ChatPanel() {
     : Array.from(state.tasks.values()).filter(t => t.direction === 'outgoing');
 
   const isConnected = state.status === 'connected';
-  const showResponseComposer = isViewingIncoming && selectedTask?.status === 'input-required';
+  const terminalStates = new Set(['completed', 'failed', 'canceled']);
+  const showResponseComposer = isViewingIncoming && selectedTask != null && !terminalStates.has(selectedTask.status);
 
   // Agent name for direction indicator
   const agentName = state.agentCard?.name || 'Remote Agent';
@@ -137,7 +147,12 @@ export default function ChatPanel() {
           ) : (
             <div className="space-y-0">
               {tasksToShow.map((task) => (
-                <TaskThread key={task.id} task={task} onViewRaw={handleViewRaw} />
+                <TaskThread
+                  key={task.id}
+                  task={task}
+                  onViewRaw={handleViewRaw}
+                  onSelectReply={task.status === 'input-required' ? (id) => setReplyingToTaskId(id) : undefined}
+                />
               ))}
             </div>
           )}
@@ -152,9 +167,14 @@ export default function ChatPanel() {
 
         {/* Bottom input: ResponseComposer for incoming tasks, MessageInput for outgoing */}
         {showResponseComposer ? (
-          <ResponseComposer taskId={selectedTask!.id} onReply={() => {}} />
+          <ResponseComposer taskId={selectedTask!.id} contextId={state.selectedTaskId!} onReply={() => {}} />
         ) : (
-          <MessageInput onSend={handleSend} disabled={!isConnected} />
+          <MessageInput
+            onSend={handleSend}
+            disabled={!isConnected}
+            replyingTo={replyInfo}
+            onClearReply={() => setReplyingToTaskId(null)}
+          />
         )}
       </div>
 

@@ -10,11 +10,12 @@ import ResubscribeButton from './ResubscribeButton';
 interface TaskThreadProps {
   task: TaskData;
   onViewRaw: (exchange: RawExchange) => void;
+  onSelectReply?: (taskId: string) => void;
 }
 
 const terminalStates = new Set(['completed', 'failed', 'canceled']);
 
-export default function TaskThread({ task, onViewRaw }: TaskThreadProps) {
+export default function TaskThread({ task, onViewRaw, onSelectReply }: TaskThreadProps) {
   const [expanded, setExpanded] = useState(true);
   const { dispatch } = useConnection();
 
@@ -61,13 +62,20 @@ export default function TaskThread({ task, onViewRaw }: TaskThreadProps) {
         <div className="flex flex-col gap-2 mt-2">
           {task.messages.map((message, index) => {
             const exchange = task.rawExchanges[index];
+            const canReply = onSelectReply && task.status === 'input-required' && message.role === 'agent';
             return (
-              <MessageBubble
+              <div
                 key={message.id}
-                message={message}
-                direction={message.role === 'user' ? 'outgoing' : 'incoming'}
-                onViewRaw={exchange ? () => onViewRaw(exchange) : undefined}
-              />
+                onClick={canReply ? () => onSelectReply(task.id) : undefined}
+                className={canReply ? 'cursor-pointer hover:bg-slate-50 rounded-lg -mx-1 px-1 transition-colors' : ''}
+                title={canReply ? 'Click to reply to this task' : undefined}
+              >
+                <MessageBubble
+                  message={message}
+                  direction={message.role === 'user' ? 'outgoing' : 'incoming'}
+                  onViewRaw={exchange ? () => onViewRaw(exchange) : undefined}
+                />
+              </div>
             );
           })}
 

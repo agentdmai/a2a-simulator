@@ -57,7 +57,7 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
         ? message as { role?: string; parts?: Array<{ text?: string }>; messageId?: string }
         : null;
       const senderText = msg?.parts?.[0]?.text || '';
-      const senderName = 'Remote Agent'; // Default name; could be enhanced with agent card info
+      const senderName = 'Remote Agent';
 
       const chatMessage = {
         id: msg?.messageId || crypto.randomUUID(),
@@ -66,16 +66,31 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
         timestamp,
       };
 
-      const newTask: TaskData = {
-        id: taskId,
-        contextId: contextId || taskId,
-        status: (status as TaskData['status']) || 'input-required',
-        messages: senderText ? [chatMessage] : [],
-        rawExchanges: [],
-        direction: 'incoming',
-        senderName,
-      };
-      tasks.set(contextId || taskId, newTask);
+      const key = contextId || taskId;
+      const existing = tasks.get(key);
+
+      if (existing) {
+        // Follow-up message on existing task — append message and update status/taskId
+        const updated = {
+          ...existing,
+          id: taskId, // Update to latest taskId (SDK may assign new ones)
+          status: (status as TaskData['status']) || 'input-required',
+          messages: senderText ? [...existing.messages, chatMessage] : existing.messages,
+        };
+        tasks.set(key, updated);
+      } else {
+        // New incoming task
+        const newTask: TaskData = {
+          id: taskId,
+          contextId: key,
+          status: (status as TaskData['status']) || 'input-required',
+          messages: senderText ? [chatMessage] : [],
+          rawExchanges: [],
+          direction: 'incoming',
+          senderName,
+        };
+        tasks.set(key, newTask);
+      }
       return { ...state, tasks };
     }
     case 'TASK_CANCELED': {
@@ -94,6 +109,12 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
       const existing = tasks.get(contextId);
       if (existing) {
         const updated = { ...existing };
+        // Capture remote agent's taskId for reply support
+        // status-update events have taskId; task events have id
+        const remoteId = (rest.taskId as string) || (kind === 'task' && rest.id ? (rest.id as string) : null);
+        if (remoteId) {
+          updated.remoteTaskId = remoteId;
+        }
 
         if (kind === 'artifact-update') {
           // Extract artifact data and append to task's artifacts array
@@ -117,13 +138,21 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
               : null;
             const newText = msg?.role === 'agent' && msg.parts?.[0]?.text ? msg.parts[0].text : '';
 
-            // Find existing streaming message to update in-place
+            // Find existing streaming message — finalize it before adding new one
             const streamingIdx = updated.messages.findIndex(m => m.isStreaming === true);
             if (streamingIdx >= 0) {
-              // Update existing streaming message text
+              // Finalize previous streaming message, then append new one
               updated.messages = updated.messages.map((m, i) =>
-                i === streamingIdx ? { ...m, text: newText || m.text } : m
+                i === streamingIdx ? { ...m, isStreaming: false } : m
               );
+              updated.messages = [...updated.messages, {
+                id: msg?.messageId || crypto.randomUUID(),
+                role: 'agent' as const,
+                text: newText,
+                timestamp: new Date().toISOString(),
+                isStreaming: true,
+                taskState: 'working' as const,
+              }];
             } else {
               // Add new streaming message
               updated.messages = [...updated.messages, {
@@ -132,43 +161,59 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
                 text: newText,
                 timestamp: new Date().toISOString(),
                 isStreaming: true,
+                taskState: 'working' as const,
               }];
             }
           } else if (statusObj.state === 'completed' || statusObj.state === 'failed') {
-            // Clear isStreaming on all messages and add final message text if present
+            // Extract message text — try multiple shapes since SDK may transform it
             const msg = statusObj.message && typeof statusObj.message === 'object'
-              ? statusObj.message as { role?: string; parts?: Array<{ text?: string }>; messageId?: string }
+              ? statusObj.message as { role?: string; parts?: Array<{ kind?: string; text?: string }>; messageId?: string; kind?: string }
               : null;
-            const finalText = msg?.role === 'agent' && msg.parts?.[0]?.text ? msg.parts[0].text : null;
+            const finalText = msg?.parts?.[0]?.text || null;
 
-            // Update streaming messages: set isStreaming false and update text if we have final text
+            // Clear isStreaming on all messages and add final message if present
             const streamingIdx = updated.messages.findIndex(m => m.isStreaming === true);
             if (streamingIdx >= 0) {
               updated.messages = updated.messages.map((m, i) =>
                 i === streamingIdx
-                  ? { ...m, isStreaming: false, text: finalText || m.text }
+                  ? { ...m, isStreaming: false, text: finalText || m.text, taskState: statusObj.state as TaskData['status'] }
                   : m
               );
             } else if (finalText) {
               // No streaming message existed, add the final message
-              updated.messages = [...updated.messages, {
-                id: msg?.messageId || crypto.randomUUID(),
-                role: 'agent' as const,
-                text: finalText,
-                timestamp: new Date().toISOString(),
-              }];
+              // Deduplicate: SDK may send multiple status-updates for the same terminal state
+              const isDuplicate = msg?.messageId
+                ? updated.messages.some(m => m.id === msg.messageId)
+                : updated.messages.some(m => m.text === finalText && m.taskState === statusObj.state);
+              if (!isDuplicate) {
+                updated.messages = [...updated.messages, {
+                  id: msg?.messageId || crypto.randomUUID(),
+                  role: 'agent' as const,
+                  text: finalText,
+                  timestamp: new Date().toISOString(),
+                  taskState: statusObj.state as TaskData['status'],
+                }];
+              }
             }
           } else {
-            // Other states (input-required, etc.): add message if present
+            // Other states (input-required, etc.): add agent messages only
+            // Skip user messages — they're echoes of what A already sent
             if (statusObj.message && typeof statusObj.message === 'object') {
-              const msg = statusObj.message as { role?: string; parts?: Array<{ text?: string }>; messageId?: string };
-              if (msg.role === 'agent' && msg.parts?.[0]?.text) {
-                updated.messages = [...updated.messages, {
-                  id: msg.messageId || crypto.randomUUID(),
-                  role: 'agent',
-                  text: msg.parts[0].text,
-                  timestamp: new Date().toISOString(),
-                }];
+              const msg = statusObj.message as { role?: string; parts?: Array<{ kind?: string; text?: string }>; messageId?: string };
+              const msgText = msg.parts?.[0]?.text;
+              if (msgText && msg.role === 'agent') {
+                const isDuplicate = msg.messageId
+                  ? updated.messages.some(m => m.id === msg.messageId)
+                  : updated.messages.some(m => m.text === msgText && m.taskState === statusObj.state);
+                if (!isDuplicate) {
+                  updated.messages = [...updated.messages, {
+                    id: msg.messageId || crypto.randomUUID(),
+                    role: 'agent' as const,
+                    text: msgText,
+                    timestamp: new Date().toISOString(),
+                    taskState: statusObj.state as TaskData['status'],
+                  }];
+                }
               }
             }
           }
@@ -208,6 +253,25 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
       return { ...state, authError: null };
     case 'OWN_AGENT_CARD_LOADED':
       return { ...state, ownAgentCard: action.card };
+    case 'REPLY_SENT': {
+      const tasks = new Map(state.tasks);
+      const existing = tasks.get(action.contextId);
+      if (existing) {
+        const replyMessage = {
+          id: crypto.randomUUID(),
+          role: 'agent' as const,
+          text: action.text,
+          timestamp: new Date().toISOString(),
+          taskState: action.state,
+        };
+        tasks.set(action.contextId, {
+          ...existing,
+          status: action.state,
+          messages: [...existing.messages, replyMessage],
+        });
+      }
+      return { ...state, tasks };
+    }
     default:
       return state;
   }

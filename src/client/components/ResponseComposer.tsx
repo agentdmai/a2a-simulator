@@ -1,5 +1,7 @@
 import { useState, useRef, type KeyboardEvent, type FormEvent } from 'react';
 import { Paperclip } from 'lucide-react';
+import { useConnection } from '../context/ConnectionContext';
+import type { TaskState } from '../types/index';
 import StateDropdown from './StateDropdown';
 import ArtifactComposer from './ArtifactComposer';
 import ArtifactChip from './ArtifactChip';
@@ -15,7 +17,8 @@ interface ResponseComposerProps {
   onReply: () => void;
 }
 
-export default function ResponseComposer({ taskId, onReply }: ResponseComposerProps) {
+export default function ResponseComposer({ taskId, onReply, contextId }: ResponseComposerProps & { contextId: string }) {
+  const { dispatch } = useConnection();
   const [text, setText] = useState('');
   const [selectedState, setSelectedState] = useState('completed');
   const [artifacts, setArtifacts] = useState<ArtifactEntry[]>([]);
@@ -54,6 +57,13 @@ export default function ResponseComposer({ taskId, onReply }: ResponseComposerPr
         }),
       });
       if (res.ok) {
+        // Immediately add own reply to the incoming task thread
+        dispatch({
+          type: 'REPLY_SENT',
+          contextId,
+          text: text.trim(),
+          state: selectedState as TaskState,
+        });
         setText('');
         setArtifacts([]);
         setShowArtifactForm(false);

@@ -7,7 +7,7 @@ import IncomingTaskList from './components/IncomingTaskList';
 import ChatPanel from './components/ChatPanel';
 import AgentCardEditorDrawer from './components/AgentCardEditorDrawer';
 import SuccessBanner from './components/SuccessBanner';
-import type { SSEStatus, TaskEventPayload, IncomingTaskPayload, AgentCardInfo } from './types/index';
+import type { SSEStatus, TaskEventPayload, IncomingTaskPayload, AgentCardInfo, TaskData, TaskState } from './types/index';
 
 function AppContent() {
   const { state, dispatch } = useConnection();
@@ -23,15 +23,17 @@ function AppContent() {
     if (event === 'task-event') {
       dispatch({ type: 'TASK_EVENT', payload: data as TaskEventPayload });
     } else if (event === 'incoming-task') {
-      dispatch({ type: 'INCOMING_TASK', payload: data as IncomingTaskPayload });
+      const incomingPayload = data as IncomingTaskPayload;
+      dispatch({ type: 'INCOMING_TASK', payload: incomingPayload });
+      // Auto-switch to incoming tab and select the task only if no task is currently selected
+      if (!state.selectedTaskId) {
+        setActiveTab('incoming');
+        dispatch({ type: 'SELECT_TASK', contextId: incomingPayload.contextId || incomingPayload.taskId });
+      }
     } else if (event === 'task-canceled') {
-      const payload = data as { taskId: string };
-      // Find contextId for this taskId
-      for (const [contextId, task] of state.tasks) {
-        if (task.id === payload.taskId) {
-          dispatch({ type: 'TASK_CANCELED', contextId });
-          break;
-        }
+      const payload = data as { taskId: string; contextId?: string };
+      if (payload.contextId) {
+        dispatch({ type: 'TASK_CANCELED', contextId: payload.contextId });
       }
     } else if (event === 'connection-status') {
       const payload = data as { status: string; agentCard?: AgentCardInfo };
@@ -41,12 +43,10 @@ function AppContent() {
         dispatch({ type: 'DISCONNECTED' });
       }
     } else if (event === 'reply-sent') {
-      // Confirmation that server sent a reply for an incoming task.
-      // The reply-handler already publishes via eventBus which triggers task-event SSE.
-      // This is a supplementary notification -- log for debugging.
-      console.debug('reply-sent', data);
+      // Reply is added directly by ResponseComposer — SSE event is just a confirmation
+      console.debug('reply-sent confirmation', data);
     }
-  }, [dispatch, state.tasks]);
+  }, [dispatch, setActiveTab, state.selectedTaskId]);
 
   const handleSSEStatus = useCallback((status: SSEStatus) => {
     if (status === 'reconnecting') dispatch({ type: 'SSE_RECONNECTING' });

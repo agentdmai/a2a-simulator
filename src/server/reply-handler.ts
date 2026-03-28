@@ -96,8 +96,8 @@ export function createReplyRouter(state: AppState, sseBridge: SSEBridge): Router
       state.pendingTasks.delete(taskId);
     }
 
-    // Broadcast reply confirmation to browser SSE clients
-    sseBridge.broadcast('reply-sent', { taskId, state: selectedState });
+    // Broadcast reply confirmation to browser SSE clients (include text so B's UI shows its own replies)
+    sseBridge.broadcast('reply-sent', { taskId, contextId: ctx.contextId, state: selectedState, text });
 
     res.json({ ok: true, taskId });
   });
