@@ -26,7 +26,7 @@ Enable rapid testing and debugging of A2A agent interactions by providing a visu
 - [ ] Message input for composing and sending messages to connected agents
 - [ ] CLI args for port, agent name, and other config (maps to WebStorm run configurations)
 - [ ] Two instances can run simultaneously on different ports and communicate with each other
-- [ ] Uses Google's official a2a-node SDK
+- [ ] Uses Google's official @a2a-js/sdk package
 
 ### Out of Scope
 
@@ -39,15 +39,15 @@ Enable rapid testing and debugging of A2A agent interactions by providing a visu
 ## Context
 
 - Google A2A is an open protocol for agent-to-agent communication (announced 2025)
-- The official SDK is `a2a-node` on npm (github.com/google/a2a-node)
+- The official SDK is `@a2a-js/sdk` on npm (github.com/a2aproject/a2a-js)
 - A2A defines Agent Cards, Tasks, Messages, Artifacts, and streaming via SSE
 - The user runs WebStorm and wants two run configurations (e.g., port 3000 and port 3001) to test agents talking to each other
 - React SPA served by the same Node.js server that hosts A2A endpoints
-- TypeScript preferred (a2a-node is TypeScript)
+- TypeScript preferred (@a2a-js/sdk is TypeScript)
 
 ## Constraints
 
-- **Stack**: Node.js + React SPA + Google a2a-node SDK
+- **Stack**: Node.js + Express 5 + React 19 + Vite 8 + @a2a-js/sdk
 - **Architecture**: Single server process per instance (one port for both UI and A2A, or multiple ports if needed)
 - **Runtime**: Must support two simultaneous instances via different CLI args
 - **IDE**: CLI args must work as WebStorm run configuration parameters
