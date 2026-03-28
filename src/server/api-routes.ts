@@ -45,11 +45,13 @@ export function createApiRouter(clientManager: A2AClientManager, sseBridge: SSEB
           contextId,
         },
       };
+      // Capture raw request for JSON-RPC exchange view
+      const rawRequest = JSON.parse(JSON.stringify(params));
       // Return task reference immediately so UI can correlate SSE events
       res.json({ ok: true, messageId, contextId });
       // Stream in background, relay via SSE bridge
       const stream = clientManager.sendStreaming(params);
-      sseBridge.relayStream(contextId, stream).catch((err) => {
+      sseBridge.relayStream(contextId, stream, rawRequest).catch((err) => {
         console.error('Stream relay error:', err);
       });
     } catch (err) {

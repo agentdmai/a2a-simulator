@@ -40,10 +40,16 @@ export class SSEBridge {
     }
   }
 
-  async relayStream(contextId: string, stream: AsyncGenerator<StreamEventData>): Promise<void> {
+  async relayStream(contextId: string, stream: AsyncGenerator<StreamEventData>, rawRequest?: unknown): Promise<void> {
     try {
+      let isFirst = true;
       for await (const event of stream) {
-        this.broadcast('task-event', { contextId, ...event });
+        if (isFirst) {
+          this.broadcast('task-event', { contextId, rawRequest, rawResponse: event, ...event });
+          isFirst = false;
+        } else {
+          this.broadcast('task-event', { contextId, rawResponse: event, ...event });
+        }
       }
     } catch (err) {
       this.broadcast('stream-error', { contextId, error: (err as Error).message });

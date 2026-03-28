@@ -46,6 +46,8 @@ export interface RawExchange {
 export interface TaskEventPayload {
   contextId: string;
   kind: 'status-update' | 'artifact-update' | 'message' | 'task';
+  rawRequest?: unknown;
+  rawResponse?: unknown;
   [key: string]: unknown;
 }
 

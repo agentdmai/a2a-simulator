@@ -110,6 +110,15 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
             }
           }
         }
+        // Populate rawExchanges from SSE event raw data
+        if (action.payload.rawRequest || action.payload.rawResponse) {
+          updated.rawExchanges = [...updated.rawExchanges, {
+            id: crypto.randomUUID(),
+            request: action.payload.rawRequest ?? undefined,
+            response: action.payload.rawResponse ?? undefined,
+            timestamp: new Date().toISOString(),
+          }];
+        }
         tasks.set(contextId, updated);
       } else {
         // New task from SSE event
