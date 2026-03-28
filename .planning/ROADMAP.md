@@ -13,7 +13,7 @@ This roadmap delivers a dual-role A2A protocol test client in three phases: firs
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Protocol Foundation** - Express server with A2A server and client protocol support, testable via curl between two instances (completed 2026-03-28)
-- [ ] **Phase 2: Client UI and Streaming** - React SPA with chat interface, SSE streaming, connection panel, and task visualization
+- [x] **Phase 2: Client UI and Streaming** - React SPA with chat interface, SSE streaming, connection panel, and task visualization
 - [ ] **Phase 3: Server Mode and Completeness** - Incoming task management, response composer, auth, artifacts, and remaining protocol methods
 
 ## Phase Details
@@ -60,11 +60,11 @@ Plans:
   3. User can edit their agent's name, description, and skills via the UI, with changes reflected immediately in the served Agent Card
   4. User can configure auth tokens for outgoing connections and set bearer token requirements for their own endpoint
   5. User can create/attach artifacts, cancel tasks, and resubscribe to SSE streams for existing tasks
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 03-01: Server mode UI (incoming task panel, response composer, state control, artifacts)
-- [ ] 03-02: Agent Card editor, authentication, and remaining protocol methods (cancel, resubscribe)
+- [x] 03-01-PLAN.md — Server mode UI: incoming task panel, response composer, state control, artifacts, cancel/resubscribe
+- [ ] 03-02-PLAN.md — Agent Card editor, authentication (outgoing and incoming), auth error handling
 
 ## Progress
 
@@ -75,4 +75,4 @@ Phases execute in numeric order: 1 -> 2 -> 3
 |-------|----------------|--------|-----------|
 | 1. Protocol Foundation | 2/2 | Complete   | 2026-03-28 |
 | 2. Client UI and Streaming | 3/3 | Complete | 2026-03-27 |
-| 3. Server Mode and Completeness | 0/2 | Not started | - |
+| 3. Server Mode and Completeness | 1/2 | In Progress | - |

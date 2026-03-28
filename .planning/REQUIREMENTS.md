@@ -21,16 +21,16 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLNT-03**: User can send messages to connected agent via message/send (JSON-RPC)
 - [x] **CLNT-04**: User can send streaming messages via message/stream with real-time SSE event rendering
 - [x] **CLNT-05**: User can fetch task status by ID (tasks/get)
-- [ ] **CLNT-06**: User can cancel a task (tasks/cancel)
-- [ ] **CLNT-07**: User can resubscribe to SSE stream for existing task (tasks/resubscribe)
+- [x] **CLNT-06**: User can cancel a task (tasks/cancel)
+- [x] **CLNT-07**: User can resubscribe to SSE stream for existing task (tasks/resubscribe)
 
 ### Server Mode
 
 - [x] **SRVR-01**: Instance acts as A2A server — receives incoming tasks from remote agents via JSON-RPC
-- [ ] **SRVR-02**: Incoming tasks appear in a management panel with status, sender, and message history
-- [ ] **SRVR-03**: User can manually compose and send responses to incoming tasks (human-in-the-loop)
-- [ ] **SRVR-04**: User can control task state transitions (working → input-required → completed/failed) with status messages
-- [ ] **SRVR-05**: User can create and attach artifacts when responding as server agent
+- [x] **SRVR-02**: Incoming tasks appear in a management panel with status, sender, and message history
+- [x] **SRVR-03**: User can manually compose and send responses to incoming tasks (human-in-the-loop)
+- [x] **SRVR-04**: User can control task state transitions (working → input-required → completed/failed) with status messages
+- [x] **SRVR-05**: User can create and attach artifacts when responding as server agent
 
 ### UI
 
@@ -95,13 +95,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLNT-03 | Phase 1 | Complete |
 | CLNT-04 | Phase 2 | Complete |
 | CLNT-05 | Phase 2 | Complete |
-| CLNT-06 | Phase 3 | Pending |
-| CLNT-07 | Phase 3 | Pending |
+| CLNT-06 | Phase 3 | Complete |
+| CLNT-07 | Phase 3 | Complete |
 | SRVR-01 | Phase 1 | Complete |
-| SRVR-02 | Phase 3 | Pending |
-| SRVR-03 | Phase 3 | Pending |
-| SRVR-04 | Phase 3 | Pending |
-| SRVR-05 | Phase 3 | Pending |
+| SRVR-02 | Phase 3 | Complete |
+| SRVR-03 | Phase 3 | Complete |
+| SRVR-04 | Phase 3 | Complete |
+| SRVR-05 | Phase 3 | Complete |
 | UI-01 | Phase 2 | Complete |
 | UI-02 | Phase 2 | Complete |
 | UI-03 | Phase 2 | Complete |
