@@ -65,7 +65,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Server mode UI: incoming task panel, response composer, state control, artifacts, cancel/resubscribe
 - [x] 03-02-PLAN.md — Agent Card editor, authentication (outgoing and incoming), auth error handling
-- [ ] 03-03-PLAN.md — Gap closure: SSE event listener wiring, SuccessBanner mount race fix
+- [x] 03-03-PLAN.md — Gap closure: SSE event listener wiring, SuccessBanner mount race fix
 
 ## Progress
 
