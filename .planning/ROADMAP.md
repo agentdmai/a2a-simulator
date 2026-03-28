@@ -43,11 +43,12 @@ Plans:
   3. Streaming messages from a remote agent render incrementally in real time via SSE
   4. User can view raw JSON-RPC request/response pairs for any message exchange
   5. Task state changes are reflected in real time with visual status badges
-**Plans:** 2 plans
+**Plans:** 3 plans
 
 Plans:
 - [x] 02-01-PLAN.md — Vite + React scaffold, server API routes (connect/send/events/task), SSE bridge, ConnectionContext, hooks, and connection panel
 - [x] 02-02-PLAN.md — Chat components (MessageBubble, MessageInput, TaskThread, StatusBadge, JsonDrawer, StreamingIndicator), wired into App layout
+- [ ] 02-03-PLAN.md — Gap closure: Express 5 wildcard fix, streaming indicator lifecycle, raw JSON-RPC exchange pipeline
 
 ### Phase 3: Server Mode and Completeness
 **Goal**: Users can act as a server-side agent (receiving and responding to tasks) with full protocol coverage including auth and artifacts
@@ -73,5 +74,5 @@ Phases execute in numeric order: 1 -> 2 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Protocol Foundation | 2/2 | Complete   | 2026-03-28 |
-| 2. Client UI and Streaming | 0/2 | Not started | - |
+| 2. Client UI and Streaming | 2/3 | Gap closure | - |
 | 3. Server Mode and Completeness | 0/2 | Not started | - |
