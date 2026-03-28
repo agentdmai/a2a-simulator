@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type ReactNode, type Dispatch } from 'react';
-import type { ConnectionState, ConnectionAction, TaskData } from '../types/index';
+import type { ConnectionState, ConnectionAction, TaskData, ArtifactData } from '../types/index';
 
 const initialState: ConnectionState = {
   status: 'disconnected',
@@ -8,6 +8,7 @@ const initialState: ConnectionState = {
   remoteUrl: '',
   tasks: new Map(),
   error: null,
+  selectedTaskId: null,
 };
 
 function connectionReducer(state: ConnectionState, action: ConnectionAction): ConnectionState {
@@ -32,18 +33,71 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
           status: 'submitted',
           messages: [action.message],
           rawExchanges: [],
+          direction: 'outgoing',
         };
         tasks.set(action.contextId, newTask);
       }
       return { ...state, tasks };
     }
+    case 'INCOMING_TASK': {
+      const tasks = new Map(state.tasks);
+      const { taskId, contextId, message, status, timestamp } = action.payload;
+
+      // Extract sender name and message text from the A2A message
+      const msg = message && typeof message === 'object'
+        ? message as { role?: string; parts?: Array<{ text?: string }>; messageId?: string }
+        : null;
+      const senderText = msg?.parts?.[0]?.text || '';
+      const senderName = 'Remote Agent'; // Default name; could be enhanced with agent card info
+
+      const chatMessage = {
+        id: msg?.messageId || crypto.randomUUID(),
+        role: 'user' as const, // Remote agent acting as user (sender)
+        text: senderText,
+        timestamp,
+      };
+
+      const newTask: TaskData = {
+        id: taskId,
+        contextId: contextId || taskId,
+        status: (status as TaskData['status']) || 'input-required',
+        messages: senderText ? [chatMessage] : [],
+        rawExchanges: [],
+        direction: 'incoming',
+        senderName,
+      };
+      tasks.set(contextId || taskId, newTask);
+      return { ...state, tasks };
+    }
+    case 'TASK_CANCELED': {
+      const tasks = new Map(state.tasks);
+      const existing = tasks.get(action.contextId);
+      if (existing) {
+        tasks.set(action.contextId, { ...existing, status: 'canceled' });
+      }
+      return { ...state, tasks };
+    }
+    case 'SELECT_TASK':
+      return { ...state, selectedTaskId: action.contextId };
     case 'TASK_EVENT': {
       const tasks = new Map(state.tasks);
       const { contextId, kind, ...rest } = action.payload;
       const existing = tasks.get(contextId);
       if (existing) {
         const updated = { ...existing };
-        if (kind === 'status-update' && rest.status && typeof rest.status === 'object') {
+
+        if (kind === 'artifact-update') {
+          // Extract artifact data and append to task's artifacts array
+          const artifact = rest.artifact as { artifactId?: string; name?: string; parts?: Array<{ text?: string }> } | undefined;
+          if (artifact) {
+            const artifactData: ArtifactData = {
+              artifactId: artifact.artifactId || crypto.randomUUID(),
+              name: artifact.name,
+              content: artifact.parts?.[0]?.text || '',
+            };
+            updated.artifacts = [...(updated.artifacts || []), artifactData];
+          }
+        } else if (kind === 'status-update' && rest.status && typeof rest.status === 'object') {
           const statusObj = rest.status as { state?: string; message?: unknown };
           if (statusObj.state) updated.status = statusObj.state as TaskData['status'];
 
@@ -96,7 +150,7 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
               }];
             }
           } else {
-            // Other states: add message if present (original behavior)
+            // Other states (input-required, etc.): add message if present
             if (statusObj.message && typeof statusObj.message === 'object') {
               const msg = statusObj.message as { role?: string; parts?: Array<{ text?: string }>; messageId?: string };
               if (msg.role === 'agent' && msg.parts?.[0]?.text) {
@@ -128,6 +182,7 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
           status: 'submitted',
           messages: [],
           rawExchanges: [],
+          direction: 'outgoing',
         });
       }
       return { ...state, tasks };

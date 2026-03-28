@@ -1,36 +1,60 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import type { TaskData, RawExchange } from '../types/index';
+import { useConnection } from '../context/ConnectionContext';
 import MessageBubble from './MessageBubble';
 import StatusBadge from './StatusBadge';
+import CancelTaskButton from './CancelTaskButton';
+import ResubscribeButton from './ResubscribeButton';
 
 interface TaskThreadProps {
   task: TaskData;
   onViewRaw: (exchange: RawExchange) => void;
 }
 
+const terminalStates = new Set(['completed', 'failed', 'canceled']);
+
 export default function TaskThread({ task, onViewRaw }: TaskThreadProps) {
   const [expanded, setExpanded] = useState(true);
+  const { dispatch } = useConnection();
 
   const shortId = task.id.slice(0, 8);
+  const isOutgoing = task.direction === 'outgoing' || !task.direction;
+  const isTerminal = terminalStates.has(task.status);
+
+  function handleCancel() {
+    dispatch({ type: 'TASK_CANCELED', contextId: task.contextId });
+  }
 
   return (
     <div className="border-b border-slate-100 pb-4 mb-4">
       {/* Thread header */}
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 w-full text-left py-1 hover:bg-slate-50 rounded px-2 -mx-2"
-      >
-        <ChevronDown
-          size={16}
-          className={`text-slate-400 transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
-        />
-        <span className="font-mono text-xs text-slate-500" title={task.id}>
-          {shortId}
-        </span>
-        <StatusBadge status={task.status} />
-      </button>
+      <div className="flex items-center gap-2 py-1 px-2 -mx-2">
+        <button
+          type="button"
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-2 flex-1 text-left hover:bg-slate-50 rounded"
+        >
+          <ChevronDown
+            size={16}
+            className={`text-slate-400 transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
+          />
+          <span className="font-mono text-xs text-slate-500" title={task.id}>
+            {shortId}
+          </span>
+          <StatusBadge status={task.status} />
+        </button>
+
+        {/* Action buttons for outgoing tasks */}
+        {isOutgoing && !isTerminal && (
+          <div className="flex items-center gap-2">
+            {task.status === 'working' && (
+              <ResubscribeButton taskId={task.id} onResubscribe={() => {}} />
+            )}
+            <CancelTaskButton taskId={task.id} onCancel={handleCancel} />
+          </div>
+        )}
+      </div>
 
       {/* Messages */}
       {expanded && (
@@ -46,6 +70,18 @@ export default function TaskThread({ task, onViewRaw }: TaskThreadProps) {
               />
             );
           })}
+
+          {/* Display artifacts if present */}
+          {task.artifacts && task.artifacts.length > 0 && (
+            <div className="space-y-1 mt-2">
+              {task.artifacts.map((artifact) => (
+                <div key={artifact.artifactId} className="bg-slate-50 border border-slate-200 rounded p-2">
+                  <div className="text-xs font-medium text-slate-600">{artifact.name || 'Artifact'}</div>
+                  <pre className="text-xs text-slate-700 mt-1 whitespace-pre-wrap font-mono">{artifact.content}</pre>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

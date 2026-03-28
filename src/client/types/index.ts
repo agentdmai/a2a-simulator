@@ -5,7 +5,7 @@ export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 're
 export type SSEStatus = 'connected' | 'reconnecting' | 'failed';
 
 // Task status matching A2A protocol states
-export type TaskState = 'submitted' | 'working' | 'input-required' | 'completed' | 'failed';
+export type TaskState = 'submitted' | 'working' | 'input-required' | 'completed' | 'failed' | 'canceled';
 
 // Agent card shape (mirrors @a2a-js/sdk AgentCard relevant fields)
 export interface AgentCardInfo {
@@ -25,6 +25,14 @@ export interface ChatMessage {
   isStreaming?: boolean;
 }
 
+// Artifact data for display
+export interface ArtifactData {
+  artifactId: string;
+  name?: string;
+  mimeType?: string;
+  content: string;
+}
+
 // Task data for task-grouped threads
 export interface TaskData {
   id: string;
@@ -32,6 +40,9 @@ export interface TaskData {
   status: TaskState;
   messages: ChatMessage[];
   rawExchanges: RawExchange[];
+  direction: 'outgoing' | 'incoming';
+  senderName?: string;
+  artifacts?: ArtifactData[];
 }
 
 // Raw JSON-RPC exchange for the drawer
@@ -51,6 +62,15 @@ export interface TaskEventPayload {
   [key: string]: unknown;
 }
 
+// Incoming task SSE payload
+export interface IncomingTaskPayload {
+  taskId: string;
+  contextId: string;
+  message: unknown;
+  status: string;
+  timestamp: string;
+}
+
 // Connection state for useReducer
 export interface ConnectionState {
   status: ConnectionStatus;
@@ -59,6 +79,7 @@ export interface ConnectionState {
   remoteUrl: string;
   tasks: Map<string, TaskData>;
   error: string | null;
+  selectedTaskId: string | null;
 }
 
 // Actions for ConnectionContext reducer
@@ -71,4 +92,7 @@ export type ConnectionAction =
   | { type: 'MESSAGE_SENT'; contextId: string; message: ChatMessage }
   | { type: 'SSE_RECONNECTING' }
   | { type: 'SSE_RECONNECTED' }
-  | { type: 'SSE_FAILED' };
+  | { type: 'SSE_FAILED' }
+  | { type: 'INCOMING_TASK'; payload: IncomingTaskPayload }
+  | { type: 'TASK_CANCELED'; contextId: string }
+  | { type: 'SELECT_TASK'; contextId: string | null };

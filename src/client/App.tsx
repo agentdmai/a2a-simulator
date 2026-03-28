@@ -1,18 +1,32 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ConnectionProvider, useConnection } from './context/ConnectionContext';
 import { useSSE } from './hooks/useSSE';
+import LeftPanelTabs from './components/LeftPanelTabs';
 import ConnectionPanel from './components/ConnectionPanel';
+import IncomingTaskList from './components/IncomingTaskList';
 import ChatPanel from './components/ChatPanel';
-import type { SSEStatus, TaskEventPayload } from './types/index';
+import type { SSEStatus, TaskEventPayload, IncomingTaskPayload } from './types/index';
 
 function AppContent() {
-  const { dispatch } = useConnection();
+  const { state, dispatch } = useConnection();
+  const [activeTab, setActiveTab] = useState<'connection' | 'incoming'>('connection');
 
   const handleSSEEvent = useCallback((event: string, data: unknown) => {
     if (event === 'task-event') {
       dispatch({ type: 'TASK_EVENT', payload: data as TaskEventPayload });
+    } else if (event === 'incoming-task') {
+      dispatch({ type: 'INCOMING_TASK', payload: data as IncomingTaskPayload });
+    } else if (event === 'task-canceled') {
+      const payload = data as { taskId: string };
+      // Find contextId for this taskId
+      for (const [contextId, task] of state.tasks) {
+        if (task.id === payload.taskId) {
+          dispatch({ type: 'TASK_CANCELED', contextId });
+          break;
+        }
+      }
     }
-  }, [dispatch]);
+  }, [dispatch, state.tasks]);
 
   const handleSSEStatus = useCallback((status: SSEStatus) => {
     if (status === 'reconnecting') dispatch({ type: 'SSE_RECONNECTING' });
@@ -22,9 +36,27 @@ function AppContent() {
 
   useSSE('/api/events', handleSSEEvent, handleSSEStatus);
 
+  // Count incoming tasks with input-required status for the badge
+  const incomingTasks = Array.from(state.tasks.values()).filter(t => t.direction === 'incoming');
+  const incomingCount = incomingTasks.filter(t => t.status === 'input-required').length;
+
+  function handleSelectTask(contextId: string) {
+    dispatch({ type: 'SELECT_TASK', contextId });
+  }
+
   return (
     <div className="flex h-screen bg-white">
-      <ConnectionPanel />
+      <LeftPanelTabs activeTab={activeTab} onTabChange={setActiveTab} incomingCount={incomingCount}>
+        {activeTab === 'connection' ? (
+          <ConnectionPanel />
+        ) : (
+          <IncomingTaskList
+            tasks={incomingTasks}
+            selectedTaskId={state.selectedTaskId}
+            onSelect={handleSelectTask}
+          />
+        )}
+      </LeftPanelTabs>
       <div className="flex-1 flex flex-col min-w-0">
         <ChatPanel />
       </div>

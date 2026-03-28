@@ -6,6 +6,7 @@ const statusStyles: Record<TaskState, string> = {
   'input-required': 'bg-violet-100 text-violet-800',
   completed: 'bg-green-100 text-green-800',
   failed: 'bg-red-100 text-red-800',
+  canceled: 'bg-slate-100 text-slate-600',
 };
 
 function formatStatus(status: TaskState): string {

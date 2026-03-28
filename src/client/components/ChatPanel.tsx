@@ -4,6 +4,8 @@ import { useApi } from '../hooks/useApi';
 import type { RawExchange } from '../types/index';
 import TaskThread from './TaskThread';
 import MessageInput from './MessageInput';
+import ResponseComposer from './ResponseComposer';
+import DirectionIndicator from './DirectionIndicator';
 import JsonDrawer from './JsonDrawer';
 import ReconnectBanner from './ReconnectBanner';
 
@@ -66,8 +68,20 @@ export default function ChatPanel() {
     dispatch({ type: 'SSE_RECONNECTING' });
   }
 
-  const tasksArray = Array.from(state.tasks.values());
+  // Determine the selected task (if any)
+  const selectedTask = state.selectedTaskId ? state.tasks.get(state.selectedTaskId) : null;
+  const isViewingIncoming = selectedTask?.direction === 'incoming';
+
+  // Determine tasks to show: if a specific task is selected, show only that one; otherwise show all outgoing
+  const tasksToShow = selectedTask
+    ? [selectedTask]
+    : Array.from(state.tasks.values()).filter(t => t.direction === 'outgoing');
+
   const isConnected = state.status === 'connected';
+  const showResponseComposer = isViewingIncoming && selectedTask?.status === 'input-required';
+
+  // Agent name for direction indicator
+  const agentName = state.agentCard?.name || 'Remote Agent';
 
   return (
     <>
@@ -75,13 +89,23 @@ export default function ChatPanel() {
         {/* Reconnect banner */}
         <ReconnectBanner status={state.sseStatus} onRetry={handleRetry} />
 
+        {/* Direction indicator for selected task */}
+        {selectedTask && (
+          <div className="px-6 pt-3 pb-1 border-b border-slate-100">
+            <DirectionIndicator
+              direction={selectedTask.direction}
+              agentName={selectedTask.direction === 'incoming' ? (selectedTask.senderName || 'Remote Agent') : agentName}
+            />
+          </div>
+        )}
+
         {/* Message area */}
         <div
           ref={messagesRef}
           onScroll={handleScroll}
           className="flex-1 overflow-y-auto p-6"
         >
-          {tasksArray.length === 0 ? (
+          {tasksToShow.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 {state.status === 'disconnected' || state.status === 'error' ? (
@@ -103,7 +127,7 @@ export default function ChatPanel() {
             </div>
           ) : (
             <div className="space-y-0">
-              {tasksArray.map((task) => (
+              {tasksToShow.map((task) => (
                 <TaskThread key={task.id} task={task} onViewRaw={handleViewRaw} />
               ))}
             </div>
@@ -117,8 +141,12 @@ export default function ChatPanel() {
           </div>
         )}
 
-        {/* Message input */}
-        <MessageInput onSend={handleSend} disabled={!isConnected} />
+        {/* Bottom input: ResponseComposer for incoming tasks, MessageInput for outgoing */}
+        {showResponseComposer ? (
+          <ResponseComposer taskId={selectedTask!.id} onReply={() => {}} />
+        ) : (
+          <MessageInput onSend={handleSend} disabled={!isConnected} />
+        )}
       </div>
 
       {/* JSON Drawer */}
