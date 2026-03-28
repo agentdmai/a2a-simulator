@@ -4,14 +4,13 @@ import { useConnection } from '../context/ConnectionContext';
 import { useApi } from '../hooks/useApi';
 import SkillsTagInput from './SkillsTagInput';
 import AuthToggle from './AuthToggle';
-import SuccessBanner from './SuccessBanner';
-
 interface AgentCardEditorDrawerProps {
   open: boolean;
   onClose: () => void;
+  onSaveSuccess?: (message: string) => void;
 }
 
-export default function AgentCardEditorDrawer({ open, onClose }: AgentCardEditorDrawerProps) {
+export default function AgentCardEditorDrawer({ open, onClose, onSaveSuccess }: AgentCardEditorDrawerProps) {
   const { state, dispatch } = useConnection();
   const api = useApi();
 
@@ -21,7 +20,6 @@ export default function AgentCardEditorDrawer({ open, onClose }: AgentCardEditor
   const [url, setUrl] = useState('');
   const [authEnabled, setAuthEnabled] = useState(false);
   const [authToken, setAuthToken] = useState('');
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Populate form when drawer opens
   useEffect(() => {
@@ -46,7 +44,7 @@ export default function AgentCardEditorDrawer({ open, onClose }: AgentCardEditor
       dispatch({ type: 'OWN_AGENT_CARD_LOADED', card: result.agentCard });
     }
 
-    setSuccessMessage('Agent Card updated');
+    onSaveSuccess?.('Agent Card updated');
     onClose();
   }
 
@@ -62,9 +60,6 @@ export default function AgentCardEditorDrawer({ open, onClose }: AgentCardEditor
 
   return (
     <>
-      {/* Success banner rendered outside the drawer so it persists after close */}
-      {successMessage && <SuccessBanner message={successMessage} />}
-
       {/* Backdrop */}
       <div className="fixed inset-0 z-40" onClick={onClose} />
 

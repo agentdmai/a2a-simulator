@@ -2,16 +2,20 @@ import { useState, useEffect } from 'react';
 
 interface SuccessBannerProps {
   message: string;
+  onDismiss?: () => void;
 }
 
-export default function SuccessBanner({ message }: SuccessBannerProps) {
+export default function SuccessBanner({ message, onDismiss }: SuccessBannerProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     setVisible(true);
-    const timer = setTimeout(() => setVisible(false), 3000);
+    const timer = setTimeout(() => {
+      setVisible(false);
+      onDismiss?.();
+    }, 3000);
     return () => clearTimeout(timer);
-  }, [message]);
+  }, [message, onDismiss]);
 
   if (!visible) return null;
 
