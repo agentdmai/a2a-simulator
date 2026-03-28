@@ -80,6 +80,8 @@ export interface ConnectionState {
   tasks: Map<string, TaskData>;
   error: string | null;
   selectedTaskId: string | null;
+  authError: string | null;
+  ownAgentCard: AgentCardInfo | null;
 }
 
 // Actions for ConnectionContext reducer
@@ -95,4 +97,7 @@ export type ConnectionAction =
   | { type: 'SSE_FAILED' }
   | { type: 'INCOMING_TASK'; payload: IncomingTaskPayload }
   | { type: 'TASK_CANCELED'; contextId: string }
-  | { type: 'SELECT_TASK'; contextId: string | null };
+  | { type: 'SELECT_TASK'; contextId: string | null }
+  | { type: 'AUTH_ERROR'; error: string }
+  | { type: 'CLEAR_AUTH_ERROR' }
+  | { type: 'OWN_AGENT_CARD_LOADED'; card: AgentCardInfo };

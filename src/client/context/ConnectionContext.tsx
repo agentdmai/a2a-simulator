@@ -9,6 +9,8 @@ const initialState: ConnectionState = {
   tasks: new Map(),
   error: null,
   selectedTaskId: null,
+  authError: null,
+  ownAgentCard: null,
 };
 
 function connectionReducer(state: ConnectionState, action: ConnectionAction): ConnectionState {
@@ -16,11 +18,18 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
     case 'CONNECTING':
       return { ...state, status: 'connecting', remoteUrl: action.url, error: null };
     case 'CONNECTED':
-      return { ...state, status: 'connected', agentCard: action.agentCard, error: null };
+      return { ...state, status: 'connected', agentCard: action.agentCard, error: null, authError: null };
     case 'DISCONNECTED':
       return { ...state, status: 'disconnected', agentCard: null, remoteUrl: '', error: null };
-    case 'ERROR':
-      return { ...state, status: 'error', error: action.error };
+    case 'ERROR': {
+      const isAuthError = /401|auth/i.test(action.error);
+      return {
+        ...state,
+        status: 'error',
+        error: action.error,
+        authError: isAuthError ? 'Authentication failed. Check your auth token and try reconnecting.' : state.authError,
+      };
+    }
     case 'MESSAGE_SENT': {
       const tasks = new Map(state.tasks);
       const existing = tasks.get(action.contextId);
@@ -193,6 +202,12 @@ function connectionReducer(state: ConnectionState, action: ConnectionAction): Co
       return { ...state, sseStatus: 'connected' };
     case 'SSE_FAILED':
       return { ...state, sseStatus: 'failed' };
+    case 'AUTH_ERROR':
+      return { ...state, authError: action.error };
+    case 'CLEAR_AUTH_ERROR':
+      return { ...state, authError: null };
+    case 'OWN_AGENT_CARD_LOADED':
+      return { ...state, ownAgentCard: action.card };
     default:
       return state;
   }

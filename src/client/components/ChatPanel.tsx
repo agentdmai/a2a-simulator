@@ -8,6 +8,7 @@ import ResponseComposer from './ResponseComposer';
 import DirectionIndicator from './DirectionIndicator';
 import JsonDrawer from './JsonDrawer';
 import ReconnectBanner from './ReconnectBanner';
+import AuthErrorBanner from './AuthErrorBanner';
 
 export default function ChatPanel() {
   const { state, dispatch } = useConnection();
@@ -88,6 +89,14 @@ export default function ChatPanel() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Reconnect banner */}
         <ReconnectBanner status={state.sseStatus} onRetry={handleRetry} />
+
+        {/* Auth error banner */}
+        {state.authError && (
+          <AuthErrorBanner
+            message={state.authError}
+            onDismiss={() => dispatch({ type: 'CLEAR_AUTH_ERROR' })}
+          />
+        )}
 
         {/* Direction indicator for selected task */}
         {selectedTask && (

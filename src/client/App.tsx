@@ -5,11 +5,15 @@ import LeftPanelTabs from './components/LeftPanelTabs';
 import ConnectionPanel from './components/ConnectionPanel';
 import IncomingTaskList from './components/IncomingTaskList';
 import ChatPanel from './components/ChatPanel';
+import AgentCardEditorDrawer from './components/AgentCardEditorDrawer';
+import SuccessBanner from './components/SuccessBanner';
 import type { SSEStatus, TaskEventPayload, IncomingTaskPayload } from './types/index';
 
 function AppContent() {
   const { state, dispatch } = useConnection();
   const [activeTab, setActiveTab] = useState<'connection' | 'incoming'>('connection');
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSSEEvent = useCallback((event: string, data: unknown) => {
     if (event === 'task-event') {
@@ -48,7 +52,7 @@ function AppContent() {
     <div className="flex h-screen bg-white">
       <LeftPanelTabs activeTab={activeTab} onTabChange={setActiveTab} incomingCount={incomingCount}>
         {activeTab === 'connection' ? (
-          <ConnectionPanel />
+          <ConnectionPanel onOpenEditor={() => setEditorOpen(true)} />
         ) : (
           <IncomingTaskList
             tasks={incomingTasks}
@@ -58,8 +62,13 @@ function AppContent() {
         )}
       </LeftPanelTabs>
       <div className="flex-1 flex flex-col min-w-0">
+        {successMessage && <SuccessBanner message={successMessage} />}
         <ChatPanel />
       </div>
+      <AgentCardEditorDrawer
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+      />
     </div>
   );
 }
