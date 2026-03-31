@@ -7,7 +7,7 @@
     "dev": "tsx src/server/index.ts",
     "dev:client": "vite",
     "dev:server": "tsx src/server/index.ts --port 3000 --name \"Agent Alpha\"",
-    "build": "tsc",
+    "build": "vite build && tsc",
     "build:client": "vite build",
     "start": "node dist/server/index.js"
   },
