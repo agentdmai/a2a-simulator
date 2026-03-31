@@ -2,9 +2,9 @@ import { program } from 'commander';
 import { createApp } from './app.js';
 
 program
-  .requiredOption('-p, --port <number>', 'Port to listen on', parseInt)
-  .requiredOption('-n, --name <string>', 'Agent name')
-  .option('-d, --description <string>', 'Agent description', 'A2A Test Agent')
+  .option('-p, --port <number>', 'Port to listen on', parseInt, parseInt(process.env.PORT || '3000'))
+  .option('-n, --name <string>', 'Agent name', process.env.AGENT_NAME || 'A2A Agent')
+  .option('-d, --description <string>', 'Agent description', process.env.AGENT_DESCRIPTION || 'A2A Test Agent')
   .parse();
 
 const opts = program.opts<{ port: number; name: string; description: string }>();
