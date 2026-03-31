@@ -9,10 +9,30 @@ interface ConnectionPanelProps {
   onOpenEditor?: () => void;
 }
 
+function getCounterpart(): { defaultUrl: string; linkUrl: string; linkLabel: string } | null {
+  const host = window.location.hostname;
+  if (host === 'beta.a2a.dev.agentdm.ai') {
+    return {
+      defaultUrl: 'https://alpha.a2a.dev.agentdm.ai:3001',
+      linkUrl: 'https://alpha.a2a.dev.agentdm.ai',
+      linkLabel: 'Open Alpha',
+    };
+  }
+  if (host === 'alpha.a2a.dev.agentdm.ai') {
+    return {
+      defaultUrl: 'https://beta.a2a.dev.agentdm.ai:3001',
+      linkUrl: 'https://beta.a2a.dev.agentdm.ai',
+      linkLabel: 'Open Beta',
+    };
+  }
+  return null;
+}
+
 export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) {
   const { state, dispatch } = useConnection();
   const api = useApi();
-  const [url, setUrl] = useState('http://localhost:3001');
+  const counterpart = getCounterpart();
+  const [url, setUrl] = useState(counterpart?.defaultUrl ?? 'http://localhost:3001');
   const [authToken, setAuthToken] = useState('');
 
   // Fetch own agent card on mount
@@ -64,6 +84,17 @@ export default function ConnectionPanel({ onOpenEditor }: ConnectionPanelProps) 
             isConnected ? 'opacity-60 cursor-not-allowed' : ''
           }`}
         />
+
+        {counterpart && (
+          <a
+            href={counterpart.linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-brand hover:underline"
+          >
+            {counterpart.linkLabel} &rarr;
+          </a>
+        )}
 
         <AuthTokenInput
           value={authToken}
