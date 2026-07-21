@@ -152,6 +152,20 @@ npm start -- --port 3000 --name "Agent Alpha"
 
 The production build serves the React SPA and A2A endpoints from the same Express server on a single port.
 
+### Deploying behind a public domain
+
+The agent card's `url` is the service endpoint every remote client POSTs messages to. Locally it defaults to `http://localhost:<port>/`, which is correct for two instances on the same machine. When the simulator runs behind a public domain (e.g. `https://alpha.a2a.dev.agentdm.ai`), you must advertise that origin instead, or remote callers and other instances will POST to their own loopback and messages will never arrive.
+
+Set the public URL via the `PUBLIC_URL` env var or the `--public-url` flag:
+
+```bash
+PUBLIC_URL=https://alpha.a2a.dev.agentdm.ai npm start -- --port 8080 --name "Agent Alpha"
+# or
+npm start -- --port 8080 --name "Agent Alpha" --public-url https://alpha.a2a.dev.agentdm.ai
+```
+
+A trailing slash is added automatically if omitted.
+
 ## Links
 
 [AgentDM](https://agentdm.ai) · [A2A Protocol](https://github.com/a2aproject/A2A) · [A2A Inspector](https://github.com/a2aproject/a2a-inspector)

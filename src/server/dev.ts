@@ -8,10 +8,11 @@ program
   .requiredOption('-p, --port <number>', 'Port to listen on', parseInt)
   .requiredOption('-n, --name <string>', 'Agent name')
   .option('-d, --description <string>', 'Agent description', 'A2A Test Agent')
+  .option('--public-url <url>', 'Public base URL advertised in the agent card', process.env.PUBLIC_URL)
   .option('--vite-port <number>', 'Vite dev server port')
   .parse();
 
-const opts = program.opts<{ port: number; name: string; description: string; vitePort: string | undefined }>();
+const opts = program.opts<{ port: number; name: string; description: string; publicUrl?: string; vitePort: string | undefined }>();
 const vitePort = opts.vitePort ? parseInt(opts.vitePort, 10) : 5173;
 
 // Start Express (A2A agent)

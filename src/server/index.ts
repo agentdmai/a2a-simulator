@@ -5,12 +5,14 @@ program
   .option('-p, --port <number>', 'Port to listen on', parseInt, parseInt(process.env.PORT || '3000'))
   .option('-n, --name <string>', 'Agent name', process.env.AGENT_NAME || 'A2A Agent')
   .option('-d, --description <string>', 'Agent description', process.env.AGENT_DESCRIPTION || 'A2A Test Agent')
+  .option('--public-url <url>', 'Public base URL advertised in the agent card (set when deployed behind a domain)', process.env.PUBLIC_URL)
   .parse();
 
-const opts = program.opts<{ port: number; name: string; description: string }>();
+const opts = program.opts<{ port: number; name: string; description: string; publicUrl?: string }>();
 
 const app = createApp(opts);
 app.listen(opts.port, () => {
   console.log(`${opts.name} listening on port ${opts.port}`);
   console.log(`Agent Card: http://localhost:${opts.port}/.well-known/agent-card.json`);
+  console.log(`Advertised service URL: ${opts.publicUrl ?? `http://localhost:${opts.port}/`}`);
 });

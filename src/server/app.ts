@@ -36,7 +36,7 @@ function createAuthMiddleware(state: AppState) {
   };
 }
 
-export function createApp(opts: { port: number; name: string; description: string }) {
+export function createApp(opts: { port: number; name: string; description: string; publicUrl?: string }) {
   const agentCard = buildAgentCard(opts);
   const state = createAppState(agentCard);
   const taskStore = new InMemoryTaskStore();
