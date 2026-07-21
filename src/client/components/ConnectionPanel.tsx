@@ -13,14 +13,14 @@ function getCounterpart(): { defaultUrl: string; linkUrl: string; linkLabel: str
   const host = window.location.hostname;
   if (host === 'beta.a2a.dev.agentdm.ai') {
     return {
-      defaultUrl: 'https://alpha.a2a.dev.agentdm.ai:3001',
+      defaultUrl: 'https://alpha.a2a.dev.agentdm.ai',
       linkUrl: 'https://alpha.a2a.dev.agentdm.ai',
       linkLabel: 'Open Alpha',
     };
   }
   if (host === 'alpha.a2a.dev.agentdm.ai') {
     return {
-      defaultUrl: 'https://beta.a2a.dev.agentdm.ai:3001',
+      defaultUrl: 'https://beta.a2a.dev.agentdm.ai',
       linkUrl: 'https://beta.a2a.dev.agentdm.ai',
       linkLabel: 'Open Beta',
     };
